@@ -1,0 +1,10 @@
+{
+  "name": "super-tiler",
+  "version": "1.0.0",
+  "description": "MVT map tiling server with built-in clustering and filtering",
+  "main": "index.js",
+  "repository": "https://github.com/chargetrip/super-tiler",
+  "author": "Bartol Karuza",
+  "license": "MIT",
+  "private": true
+}
