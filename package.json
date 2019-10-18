@@ -9,7 +9,9 @@
   "private": true,
   "dependencies": {
     "dotenv": "^8.2.0",
-    "pg": "^7.12.1"
+    "lru-cache": "^5.1.1",
+    "pg": "^7.12.1",
+    "uuid": "^3.3.3"
   },
   "devDependencies": {
     "express": "^4.17.1"

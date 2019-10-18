@@ -1,4 +1,5 @@
 const express = require('express');
+const uuid = require('uuid');
 require('../js/server');
 
 const port = 3005;
@@ -15,11 +16,16 @@ supertiler({
 }).then(server => {
     const app = express();
     app.get('/stations/:z/:x/:y/tile.mvt', (req, res) => {
-        server({ z: req.params.z, x: req.params.x, y: req.params.y }).then(
+        req.id = uuid.v4();
+        console.time(req.id);
+        server({ z: req.params.z, x: req.params.x, y: req.params.y, id: req.id }).then(
             result => {
                 res.setHeader('Content-Type', 'application/x-protobuf');
                 res.setHeader('Content-Encoding', 'gzip');
+                console.time('send' + req.id);
                 res.status(200).send(result);
+                console.timeEnd('send' + req.id);
+                console.timeEnd(req.id);
             }
         ).catch(e => {
             res.status(400).send('Oops');
