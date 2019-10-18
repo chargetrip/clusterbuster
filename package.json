@@ -6,5 +6,12 @@
   "repository": "https://github.com/chargetrip/super-tiler",
   "author": "Bartol Karuza",
   "license": "MIT",
-  "private": true
+  "private": true,
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "pg": "^7.12.1"
+  },
+  "devDependencies": {
+    "express": "^4.17.1"
+  }
 }
