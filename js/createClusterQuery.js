@@ -1,6 +1,8 @@
-const filterBlock = ({ maxZoomLevel, table, geometry }) =>
+const filterBlock = ({ x, y, z, maxZoomLevel, table, geometry }) =>
     `   (SELECT ${table}.${geometry}
-    FROM ${table}),
+    FROM ${table}
+    WHERE ST_Intersects(TileDoubleBBox(${z}, ${x}, ${y}, 3857), ST_Transform(${table}.${geometry}, 3857))
+    ),
     clustered as
     (SELECT unnest(ST_ClusterWithin(wkb_geometry, 0.006)) as clusters
     FROM filtered),
@@ -9,7 +11,7 @@ const filterBlock = ({ maxZoomLevel, table, geometry }) =>
             ST_NumGeometries(clusters) as theCount
     FROM clustered),`;
 
-const query = ({ filterBlock, additionalLevels, z, x, y }) => `
+const clustered_query = ({ filterBlock, additionalLevels, z, x, y }) => `
 with filtered AS
     ${filterBlock}
     ${additionalLevels}
@@ -44,17 +46,19 @@ const zoomToDistance = zoomLevel => 10 / (zoomLevel * zoomLevel);
 function createQueryForTile({ z, x, y, maxZoomLevel, table, geometry }) {
     if (z < maxZoomLevel) {
         let additionalLevels = '';
-        for (let x = maxZoomLevel - 1; x >= z; --x) {
-            additionalLevels += additionalLevel(x);
+        for (let i = maxZoomLevel - 1; i >= z; --i) {
+            additionalLevels += additionalLevel(i);
         }
-        const ret = query({
-            filterBlock: filterBlock({ maxZoomLevel, table, geometry }),
+        const ret = clustered_query({
+            filterBlock: filterBlock({ z, x, y, maxZoomLevel, table, geometry }),
             z,
             x,
             y,
             additionalLevels,
         });
         return ret;
+    } else {
+        // TODO Implement unclustered query
     }
 }
 
