@@ -1,16 +1,21 @@
 const filterBlock = ({ x, y, z, maxZoomLevel, table, geometry, attributes }) =>
 `   
-    (SELECT ${table}.${geometry}
+    (SELECT ${table}.${geometry}, 1 as theCount
     FROM ${table}
-    WHERE ST_Intersects(TileDoubleBBox(${z}, ${x}, ${y}, 3857), ST_Transform(${table}.${geometry}, 3857))
+    WHERE ST_Intersects(TileBBox(${z}, ${x}, ${y}, 3857), ST_Transform(${table}.${geometry}, 3857))
     ),
-    clustered as
-    (SELECT unnest(ST_ClusterWithin(wkb_geometry, 0.006)) as clusters
-    FROM filtered),
-    clusters_with_meta_${maxZoomLevel} as
-    (SELECT ST_Centroid(ST_CollectionExtract(clusters, 1)) as center,
-            ST_NumGeometries(clusters) as theCount
-    FROM clustered),`;
+
+    clustered_${maxZoomLevel} AS
+(SELECT ${geometry} as center,
+        theCount,
+        ST_ClusterDBSCAN(${geometry}, ${zoomToDistance(maxZoomLevel)}, 1) over () as clusters
+ FROM filtered),
+ grouped_clusters_${maxZoomLevel} AS
+(SELECT SUM(theCount) as theCount,
+        ST_Centroid(ST_Collect(center)) as center
+ FROM clustered_${maxZoomLevel}
+ GROUP BY clusters),
+`;
 
 const unclusteredQuery = ({
     x,
@@ -53,7 +58,7 @@ with filtered AS
      tiled as
     (SELECT center,
             theCount
-     FROM clusters_with_meta_${z}
+     FROM grouped_clusters_${z}
      WHERE ST_Intersects(TileBBox(${z}, ${x}, ${y}, 3857), ST_Transform(center, 3857))),
      q as
     (SELECT 1 as c1,
@@ -65,18 +70,19 @@ from q
 `;
 
 const additionalLevel = ({ zoomLevel, attributes }) => `
-    clustered_${zoomLevel} as
-    (SELECT unnest(ST_ClusterWithin(center, ${zoomToDistance(
-        zoomLevel
-    )})) as clusters
-     FROM clusters_with_meta_${zoomLevel + 1}),
-     clusters_with_meta_${zoomLevel} as
-    (SELECT ST_Centroid(ST_CollectionExtract(clusters, 1)) as center,
-            ST_NumGeometries(clusters) as theCount
-     FROM clustered_${zoomLevel}),
+clustered_${zoomLevel} AS
+(SELECT center,
+        theCount,
+        ST_ClusterDBSCAN(center, ${zoomToDistance(zoomLevel)}, 1) over () as clusters
+ FROM grouped_clusters_${zoomLevel + 1}),
+grouped_clusters_${zoomLevel} AS
+(SELECT SUM(theCount) as theCount,
+        ST_Centroid(ST_Collect(center)) as center
+ FROM clustered_${zoomLevel}
+ GROUP BY clusters),
 `;
 
-const zoomToDistance = zoomLevel => 10 / (zoomLevel * zoomLevel);
+const zoomToDistance = zoomLevel => 10 / (Math.pow(2, zoomLevel));
 const attributeMapToFeatureAttribute = attributeMap =>
     `${
         Object.keys(attributeMap).length > 0
@@ -126,7 +132,7 @@ function createQueryForTile({
             resolution,
             attributes: attributeMap,
         });
-
+        console.log(ret);
         return ret;
     } else {
         const ret = unclusteredQuery({
@@ -138,6 +144,7 @@ function createQueryForTile({
             resolution,
             attributes: attributeMap,
         });
+        // console.log(ret);
         return ret;
     }
 }
