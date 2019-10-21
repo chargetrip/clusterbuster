@@ -14,7 +14,7 @@ const cache = new LRU(options);
 
 const { createQueryForTile } = require('./createClusterQuery');
 
-module.exports = async function({ maxZoomLevel, table, geometry }) {
+module.exports = async function({ maxZoomLevel, table, geometry, resolution, attributeMap }) {
     const pool = new pg.Pool({
         totalCount: 100,
     });
@@ -25,34 +25,40 @@ module.exports = async function({ maxZoomLevel, table, geometry }) {
     const client = await pool.connect();
     return async ({ z, x, y, id }) => {
         console.time('query' + id);
-        const value = cache.get(`${z}, ${x}, ${y}`)
+        const value = cache.get(`${z}, ${x}, ${y}`);
         if (value) {
             return value;
         }
 
-        const result = await client.query(
-            createQueryForTile({
-                z,
-                x,
-                y,
-                maxZoomLevel,
-                table,
-                geometry,
-            })
-        );
-        console.timeEnd('query' + id);
+        try {
+            const result = await client.query(
+                createQueryForTile({
+                    z,
+                    x,
+                    y,
+                    maxZoomLevel,
+                    table,
+                    geometry,
+                    resolution,
+                    attributeMap
+                })
+            );
+            console.timeEnd('query' + id);
 
-        return await new Promise(resolve => {
-            console.time('gzip' + id);
-            zlib.gzip(result.rows[0].mvt, (err, result) => {
-                if (!err) {
-                    cache.set(`${z}, ${x}, ${y}`, result);
-                    resolve(result);
-                    console.timeEnd('gzip' + id);
-                } else {
-                    reject(err);
-                }
+            return await new Promise(resolve => {
+                console.time('gzip' + id);
+                zlib.gzip(result.rows[0].mvt, (err, result) => {
+                    if (!err) {
+                        cache.set(`${z}, ${x}, ${y}`, result);
+                        resolve(result);
+                        console.timeEnd('gzip' + id);
+                    } else {
+                        reject(err);
+                    }
+                });
             });
-        });
+        } catch (e) {
+            console.log({ e });
+        }
     };
 };

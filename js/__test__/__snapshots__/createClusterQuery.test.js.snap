@@ -1,0 +1,105 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`createClusterQuery should create an unclustered Query 1`] = `
+"
+with filtered AS
+       (SELECT public.stations.wkb_geometry
+    FROM public.stations
+    WHERE ST_Intersects(TileDoubleBBox(1, 0, 1, 3857), ST_Transform(public.stations.wkb_geometry, 3857))
+    ),
+    clustered as
+    (SELECT unnest(ST_ClusterWithin(wkb_geometry, 0.006)) as clusters
+    FROM filtered),
+    clusters_with_meta_10 as
+    (SELECT ST_Centroid(ST_CollectionExtract(clusters, 1)) as center,
+            ST_NumGeometries(clusters) as theCount
+    FROM clustered),
+    
+    clustered_9 as
+    (SELECT unnest(ST_ClusterWithin(center, 0.12345679012345678)) as clusters
+     FROM clusters_with_meta_10),
+     clusters_with_meta_9 as
+    (SELECT ST_Centroid(ST_CollectionExtract(clusters, 1)) as center,
+            ST_NumGeometries(clusters) as theCount
+     FROM clustered_9),
+
+    clustered_8 as
+    (SELECT unnest(ST_ClusterWithin(center, 0.15625)) as clusters
+     FROM clusters_with_meta_9),
+     clusters_with_meta_8 as
+    (SELECT ST_Centroid(ST_CollectionExtract(clusters, 1)) as center,
+            ST_NumGeometries(clusters) as theCount
+     FROM clustered_8),
+
+    clustered_7 as
+    (SELECT unnest(ST_ClusterWithin(center, 0.20408163265306123)) as clusters
+     FROM clusters_with_meta_8),
+     clusters_with_meta_7 as
+    (SELECT ST_Centroid(ST_CollectionExtract(clusters, 1)) as center,
+            ST_NumGeometries(clusters) as theCount
+     FROM clustered_7),
+
+    clustered_6 as
+    (SELECT unnest(ST_ClusterWithin(center, 0.2777777777777778)) as clusters
+     FROM clusters_with_meta_7),
+     clusters_with_meta_6 as
+    (SELECT ST_Centroid(ST_CollectionExtract(clusters, 1)) as center,
+            ST_NumGeometries(clusters) as theCount
+     FROM clustered_6),
+
+    clustered_5 as
+    (SELECT unnest(ST_ClusterWithin(center, 0.4)) as clusters
+     FROM clusters_with_meta_6),
+     clusters_with_meta_5 as
+    (SELECT ST_Centroid(ST_CollectionExtract(clusters, 1)) as center,
+            ST_NumGeometries(clusters) as theCount
+     FROM clustered_5),
+
+    clustered_4 as
+    (SELECT unnest(ST_ClusterWithin(center, 0.625)) as clusters
+     FROM clusters_with_meta_5),
+     clusters_with_meta_4 as
+    (SELECT ST_Centroid(ST_CollectionExtract(clusters, 1)) as center,
+            ST_NumGeometries(clusters) as theCount
+     FROM clustered_4),
+
+    clustered_3 as
+    (SELECT unnest(ST_ClusterWithin(center, 1.1111111111111112)) as clusters
+     FROM clusters_with_meta_4),
+     clusters_with_meta_3 as
+    (SELECT ST_Centroid(ST_CollectionExtract(clusters, 1)) as center,
+            ST_NumGeometries(clusters) as theCount
+     FROM clustered_3),
+
+    clustered_2 as
+    (SELECT unnest(ST_ClusterWithin(center, 2.5)) as clusters
+     FROM clusters_with_meta_3),
+     clusters_with_meta_2 as
+    (SELECT ST_Centroid(ST_CollectionExtract(clusters, 1)) as center,
+            ST_NumGeometries(clusters) as theCount
+     FROM clustered_2),
+
+    clustered_1 as
+    (SELECT unnest(ST_ClusterWithin(center, 10)) as clusters
+     FROM clusters_with_meta_2),
+     clusters_with_meta_1 as
+    (SELECT ST_Centroid(ST_CollectionExtract(clusters, 1)) as center,
+            ST_NumGeometries(clusters) as theCount
+     FROM clustered_1),
+
+     tiled as
+    (SELECT center,
+            theCount
+     FROM clusters_with_meta_1
+     WHERE ST_Intersects(TileBBox(1, 0, 1, 3857), ST_Transform(center, 3857))),
+     q as
+    (SELECT 1 as c1,
+            ST_AsMVTGeom(ST_Transform(center, 3857), TileBBox(1, 0, 1, 3857), 512, 10, false) AS geom,
+            jsonb_build_object('count', theCount,a,b) as attributes
+     FROM tiled)
+SELECT ST_AsMVT(q, 'stations', 512, 'geom') as mvt
+from q
+"
+`;
+
+exports[`createClusterQuery should map attributes to features select array 1`] = `",a,b,c,d,e,f"`;

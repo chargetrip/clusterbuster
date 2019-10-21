@@ -7,8 +7,12 @@
   "author": "Bartol Karuza",
   "license": "MIT",
   "private": true,
+  "scripts": {
+    "test": "jest"
+  },
   "dependencies": {
     "dotenv": "^8.2.0",
+    "jest": "^24.9.0",
     "lru-cache": "^5.1.1",
     "pg": "^7.12.1",
     "uuid": "^3.3.3"
