@@ -29,7 +29,7 @@ WITH filtered AS
     ),
     q as
     (SELECT 1 as c1,
-            ${geometry} AS geom,
+            ST_AsMVTGeom(ST_Transform(${geometry}, 3857), TileBBox(${z}, ${x}, ${y}, 3857), ${resolution}, 10, false) AS geom,
             jsonb_build_object('count', 1${attributeMapToFeatureAttribute(
                 attributes
             )}) as attributes
