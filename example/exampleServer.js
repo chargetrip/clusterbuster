@@ -6,7 +6,7 @@ const port = 3005;
 
 const table = 'public.stations';
 const geometry = 'wkb_geometry';
-const maxZoomLevel = 11;
+const maxZoomLevel = 12;
 
 const supertiler = require('../js/server');
 supertiler({

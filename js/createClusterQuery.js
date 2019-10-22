@@ -132,7 +132,7 @@ function createQueryForTile({
             resolution,
             attributes: attributeMap,
         });
-        console.log(ret);
+        // console.log(ret);
         return ret;
     } else {
         const ret = unclusteredQuery({
