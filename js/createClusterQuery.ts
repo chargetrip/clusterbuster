@@ -39,12 +39,14 @@ const unclusteredQuery = ({
   geometry,
   resolution,
   attributes,
+  query
 }) =>
   `
 WITH filtered AS
     (SELECT ${table}.${geometry} ${attributesToSelect(attributes)}
     FROM ${table}
     WHERE ST_Intersects(TileBBox(${z}, ${x}, ${y}, 3857), ST_Transform(${table}.${geometry}, 3857))
+      ${query.length > 0 ? `AND ${query.join(' AND ')}` : ''}
     ),
     q as
     (SELECT 1 as c1,
@@ -177,6 +179,7 @@ export function createQueryForTile({
       geometry,
       resolution,
       attributes,
+      query
     });
     // console.log(ret);
     return ret;

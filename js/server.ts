@@ -70,7 +70,7 @@ export default async function Server({
             geometry,
             resolution,
             attributes,
-            query: urlQueryToSql(query)
+            query: urlQueryToSql(query),
           })
         );
 
