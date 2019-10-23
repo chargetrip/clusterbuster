@@ -3,6 +3,7 @@ import pg from 'pg';
 import zlib from 'zlib';
 import LRU from 'lru-cache';
 import { createQueryForTile } from './createClusterQuery';
+import createSupportingSQLFunctions from './supporting';
 const options = {
   max: 100000,
   length: function(n, key) {
@@ -30,7 +31,7 @@ interface IMakeTileProps {
   id: string;
 }
 
-type IMakeTileFunction = (prop: IMakeTileProps) => Promise<ArrayBuffer>
+type IMakeTileFunction = (prop: IMakeTileProps) => Promise<ArrayBuffer>;
 
 export default async function Server({
   maxZoomLevel,
@@ -47,6 +48,9 @@ export default async function Server({
     console.error('Unexpected error on idle client', err);
     process.exit(-1);
   });
+
+  await createSupportingSQLFunctions(pool);
+
   return async ({ z, x, y, id, query }: IMakeTileProps) => {
     try {
       console.time('query' + id);

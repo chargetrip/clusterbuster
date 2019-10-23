@@ -5,3 +5,4 @@ example
 babel.config.js
 rollup.config.js
 yarn.lock
+/sql/Generated.sql
