@@ -96,7 +96,7 @@ const attributeMapToSelect = attributes =>
         .map(([_, value]) => `,${value}`)
         .join('');
 
-function createQueryForTile({
+export function createQueryForTile({
     z,
     x,
     y,
@@ -148,9 +148,3 @@ function createQueryForTile({
         return ret;
     }
 }
-
-module.exports = {
-    createQueryForTile,
-    zoomToDistance,
-    attributeMapToFeatureAttribute,
-};

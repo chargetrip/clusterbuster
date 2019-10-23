@@ -2,7 +2,7 @@ const express = require('express');
 const uuid = require('uuid');
 require('../js/server');
 
-const port = 3005;
+const port = 80;
 
 const table = 'public.stations';
 const geometry = 'wkb_geometry';
@@ -15,18 +15,22 @@ supertiler({
     table,
     resolution: 512, // Mapbox default, try 256 if you are unsure what your mapping front-end library uses
     attributeMap: { status: 'status' },
-    //     filterQuery: `
-    // WHERE [22, 55, 100] @> {$power} AND
-    //     power_available: []
-    //     type_available: []
-    //     `,
-    //     additionalProperties: ['status', 'speed']
+    filterQuery: filters => {
+        const whereStatements = [];
+        if (filters.status) {
+            whereStatements.push(`status = ${filters.status}`);
+        }
+        return whereStatements.join(' AND ')
+    },
+    additionalProperties: ['status', 'speed'],
 }).then(server => {
-    // availableOnly=
     const app = express();
     app.use((req, res, next) => {
         res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
         next();
+    });
+    app.get('/health', (req, res) => {
+        res.status(200).send('OK');
     });
     app.get('/stations/:z/:x/:y/tile.mvt', (req, res) => {
         req.id = uuid.v4();

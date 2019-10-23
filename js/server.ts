@@ -1,7 +1,8 @@
 require('dotenv').config();
-const pg = require('pg');
-const zlib = require('zlib');
-const LRU = require('lru-cache');
+import pg from 'pg';
+import zlib from 'zlib';
+import LRU from 'lru-cache';
+import { createQueryForTile } from './createClusterQuery';
 const options = {
     max: 100000,
     length: function(n, key) {
@@ -12,10 +13,19 @@ const options = {
 
 const cache = new LRU(options);
 
-const { createQueryForTile } = require('./createClusterQuery');
+interface IServer {
+    maxZoomLevel: number,
+    table: string,
+    geometry: string,
+    resolution: number,
+    filterQuery: (filters: any) => string
+    // attributeMap: {[string]: [string]}
+}
 
-module.exports = async function({ maxZoomLevel, table, geometry, resolution, attributeMap }) {
-    const pool = new pg.Pool();
+export default async function({ maxZoomLevel, table, geometry, resolution, attributeMap }: IServer) {
+    const pool = pg.Pool({
+        totalCount: 100
+    });
     pool.on('error', (err, client) => {
         console.error('Unexpected error on idle client', err);
         process.exit(-1);
@@ -44,7 +54,7 @@ module.exports = async function({ maxZoomLevel, table, geometry, resolution, att
                 
                 console.timeEnd('query' + id);
     
-                return await new Promise(resolve => {
+                return await new Promise((resolve, reject) => {
                     console.time('gzip' + id);
                     zlib.gzip(result.rows[0].mvt, (err, result) => {
                         if (!err) {
