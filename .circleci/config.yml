@@ -2,22 +2,9 @@ version: 2.1
 
 workflows:
   version: 2
-    on_commit:
-      jobs:
-        - build
-
-jobs:
   build:
-    docker:
-      - image: circleci/node:lts
-    steps:
-      - build_prep
-      - run:
-        name: Test
-        command: yarn test
-      - run:
-        name: Build
-        command: yarn build
+    jobs:
+      - build_and_test
 
 commands:
   build_prep:
@@ -36,3 +23,16 @@ commands:
           key: yarn-packages-{{ checksum "yarn.lock" }}
           paths:
             - ~/.cache/yarn
+
+jobs:
+  build_and_test:
+    docker:
+      - image: circleci/node:lts
+    steps:
+      - build_prep
+      - run:
+          name: Test
+          command: yarn test
+      - run:
+          name: Build
+          command: yarn build
