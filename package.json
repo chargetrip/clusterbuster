@@ -1,8 +1,9 @@
 {
   "name": "super-tiler",
-  "version": "1.0.0",
+  "version": "0.0.9",
   "description": "MVT map tiling server with built-in clustering and filtering",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "repository": "https://github.com/chargetrip/super-tiler",
   "author": "Bartol Karuza",
   "license": "MIT",
@@ -12,14 +13,12 @@
     "babel": "babel js --out-dir dist --extensions \".ts\" --exclude \"**/__test__/*\"",
     "test": "jest"
   },
-  "dependencies": {
+  "devDependencies": {
     "dotenv": "^8.2.0",
     "jest": "^24.9.0",
     "lru-cache": "^5.1.1",
     "pg": "^7.12.1",
-    "uuid": "^3.3.3"
-  },
-  "devDependencies": {
+    "uuid": "^3.3.3",
     "@babel/cli": "^7.6.4",
     "@babel/core": "^7.6.4",
     "@babel/plugin-transform-typescript": "^7.6.3",

@@ -13,15 +13,17 @@ supertiler({
   geometry,
   table,
   resolution: 512, // Mapbox default, try 256 if you are unsure what your mapping front-end library uses
-  attributeMap: { status: 'status' },
-  urlQueryToWhere: filters => {
+  attributes: ['status'],
+  urlQueryToSql: filters => {
     const whereStatements = [];
     if (filters.status) {
-      whereStatements.push(`status = ${filters.status}`);
+      whereStatements.push(`status = '${filters.status}'`);
     }
-    return whereStatements.join(' AND ');
-  },
-  additionalProperties: ['status', 'speed'],
+    if (filters.speed) {
+      whereStatements.push(`speed = '${filters.speed}'`);
+    }
+    return whereStatements;
+  }
 }).then(server => {
   const app = express();
   app.use((req, res, next) => {
@@ -38,6 +40,7 @@ supertiler({
       z: req.params.z,
       x: req.params.x,
       y: req.params.y,
+      query: req.query,
       id: req.id,
     })
       .then(result => {
