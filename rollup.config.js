@@ -5,7 +5,7 @@ import commonjs from 'rollup-plugin-commonjs';
 import json from 'rollup-plugin-json';
 
 export default {
-  input: './example/exampleServer.js',
+  input: './js/server.ts',
   output: {
     file: 'dist/index.js',
     format: 'cjs',
@@ -13,18 +13,23 @@ export default {
   plugins: [
     resolve({
       extensions: ['.js', '.ts'],
-      preferBuiltins: true
+      preferBuiltins: true,
     }),
     json(),
     commonjs({
       include: 'node_modules/**',
       extensions: ['.js'],
-      ignore: ['pg-native' , './native']
+      ignore: ['pg-native', './native'],
     }),
     babel({
       exclude: ['node_modules/**', '**/__test__/**'],
       extensions: ['.js', '.ts'],
     }),
-    run(),
+    run({
+      env: {
+        ENV_FILE: '.development.env',
+      },
+      execArgv: ['-r', 'source-map-support/register'],
+    }),
   ],
 };
