@@ -18,11 +18,11 @@ interface IServer {
     table: string,
     geometry: string,
     resolution: number,
-    filterQuery: (filters: any) => string
-    // attributeMap: {[string]: [string]}
+    urlQueryToSql: (filters: any) => string,
+    attributeMap: any
 }
 
-export default async function({ maxZoomLevel, table, geometry, resolution, attributeMap }: IServer) {
+export default async function Server({ maxZoomLevel, table, geometry, resolution, attributeMap, urlQueryToSql }: IServer) {
     const pool = pg.Pool({
         totalCount: 100
     });

@@ -8,7 +8,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "start": "rollup --config rollup.config.js && node example/exampleServer.js",
+    "start": "rollup --config rollup.config.js && ts-node example/exampleServer.ts",
     "babel": "babel js --out-dir dist --extensions \".ts\" --exclude \"**/__test__/*\"",
     "test": "jest"
   },
@@ -30,6 +30,7 @@
     "rollup": "^1.25.2",
     "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-dts": "^1.1.10",
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-run": "^1.1.0",

@@ -14,7 +14,7 @@ supertiler({
   table,
   resolution: 512, // Mapbox default, try 256 if you are unsure what your mapping front-end library uses
   attributeMap: { status: 'status' },
-  filterQuery: filters => {
+  urlQueryToWhere: filters => {
     const whereStatements = [];
     if (filters.status) {
       whereStatements.push(`status = ${filters.status}`);
