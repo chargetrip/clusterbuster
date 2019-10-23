@@ -19,7 +19,7 @@ export default {
     commonjs({
       include: 'node_modules/**',
       extensions: ['.js'],
-      exclude: ['**/*.json']
+      ignore: ['pg-native' , './native']
     }),
     babel({
       exclude: ['node_modules/**', '**/__test__/**'],

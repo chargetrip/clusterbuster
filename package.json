@@ -27,7 +27,6 @@
     "@babel/preset-typescript": "^7.6.0",
     "@types/node": "^12.11.5",
     "express": "^4.17.1",
-    "pg-native": "^3.0.0",
     "rollup": "^1.25.2",
     "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-commonjs": "^10.1.0",
