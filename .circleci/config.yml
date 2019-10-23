@@ -1,0 +1,38 @@
+version: 2.1
+
+workflows:
+  version: 2
+    on_commit:
+      jobs:
+        - build
+
+jobs:
+  build:
+    docker:
+      - image: circleci/node:lts
+    steps:
+      - build_prep
+      - run:
+        name: Test
+        command: yarn test
+      - run:
+        name: Build
+        command: yarn build
+
+commands:
+  build_prep:
+    steps:
+      - checkout
+      - restore_cache:
+          name: Restore Yarn Package Cache
+          keys:
+            - yarn-packages-{{ checksum "yarn.lock" }}
+      - run:
+          name: Yarn
+          description: Install dependencies for all libraries and projects
+          command: yarn
+      - save_cache:
+          name: Save Yarn Package Cache
+          key: yarn-packages-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/.cache/yarn
