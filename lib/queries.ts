@@ -1,3 +1,5 @@
+import { IQueryInput } from './types/IQueryInput';
+
 const filterBlock = ({
   x,
   y,
@@ -39,7 +41,7 @@ const unclusteredQuery = ({
   geometry,
   resolution,
   attributes,
-  query
+  query,
 }) =>
   `
 WITH filtered AS
@@ -119,18 +121,6 @@ const attributesToArray = attributes =>
       attributes.map(attribute => `'${attribute}', ${attribute}`).join(', ')
     : '';
 
-interface ICreateQueryForTileProps {
-  z: number;
-  x: number;
-  y: number;
-  maxZoomLevel: number;
-  table: string;
-  geometry: string;
-  resolution: number;
-  attributes: string[];
-  query: string[];
-}
-
 export function createQueryForTile({
   z,
   x,
@@ -141,7 +131,7 @@ export function createQueryForTile({
   resolution,
   attributes,
   query,
-}: ICreateQueryForTileProps) {
+}: IQueryInput) {
   if (z < maxZoomLevel) {
     let additionalLevels = '';
     for (let i = maxZoomLevel - 1; i >= z; --i) {
@@ -179,7 +169,7 @@ export function createQueryForTile({
       geometry,
       resolution,
       attributes,
-      query
+      query,
     });
     // console.log(ret);
     return ret;
