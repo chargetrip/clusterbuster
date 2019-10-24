@@ -37,7 +37,7 @@ export async function Server<T>({
     z,
     x,
     y,
-    table = 'points',
+    table = 'public.points',
     geometry = 'location',
     filters = null,
     id = '',

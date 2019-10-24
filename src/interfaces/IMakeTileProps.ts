@@ -18,22 +18,22 @@ export interface IMakeTileProps<T> {
   y: number;
 
   /**
-   * @description The name of the table
+   * @description The name of the table, default is "public.points"
    */
   table?: string;
 
   /**
-   * @description The geometry column name
+   * @description The geometry column name, default is "location"
    */
   geometry?: string;
 
   /**
-   * @description The filters to apply
+   * @description The filters to apply, default is none
    */
   filters?: T;
 
   /**
-   * @description Unique ID of the request
+   * @description Unique ID of the request, default is an empty string
    */
   id?: string;
 }
