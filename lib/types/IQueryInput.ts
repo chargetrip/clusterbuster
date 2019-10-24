@@ -1,7 +1,6 @@
-export interface ICreateQueryForTileProps {
-  z: number;
-  x: number;
-  y: number;
+import { TileRequest } from '../../types/TileRequest';
+
+export interface IQueryInput extends TileRequest {
   maxZoomLevel: number;
   table: string;
   geometry: string;

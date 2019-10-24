@@ -4,14 +4,14 @@ const uuid = require('uuid');
 
 const port = 3005;
 
-const table = 'public.stations_5cee916f930d9566c106e9be';
-const geometry = 'location';
+const table = 'public.points';
+const geometry = 'wkb_geometry';
 const maxZoomLevel = 12;
 
 const supertiler = require('../dist');
 supertiler({
   maxZoomLevel,
-  resolution: 512, // Mapbox default, try 256 if you are unsure what your mapping front-end library uses
+  resolution: 512,
   attributes: ['status'],
   filters: filters => {
     const whereStatements = [];
@@ -22,17 +22,17 @@ supertiler({
       whereStatements.push(`speed = '${filters.speed}'`);
     }
     return whereStatements;
-  }
+  },
 }).then(server => {
   const app = express();
-  app.use((req, res, next) => {
+  app.use((_, res, next) => {
     res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
     next();
   });
-  app.get('/health', (req, res) => {
+  app.get('/health', (_, res) => {
     res.status(200).send('OK');
   });
-  app.get('/stations/:z/:x/:y/tile.mvt', (req, res) => {
+  app.get('/points/:z/:x/:y/tile.mvt', (req, res) => {
     req.id = uuid.v4();
     console.time(req.id);
     server({

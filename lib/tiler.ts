@@ -1,20 +1,21 @@
 import LRU, { Options } from 'lru-cache';
 import pg from 'pg';
-import { IMakeTileProps, IServer } from '../interfaces';
-import { TMakeTileFunction } from '../types';
-import { createQueryForTile } from './createClusterQuery';
+import { TileRenderer, TileInput, TileServerConfig } from '../types';
+import { createQueryForTile } from './queries';
 import createSupportingSQLFunctions from './supporting';
 import { zip } from './zip';
 
-export async function Server<T>({
+export async function TileServer<T>({
   maxZoomLevel = 12,
   resolution = 512,
   cacheOptions = {},
+  pgPoolOptions = {},
   filtersToWhere = null,
   attributes = [],
-}: IServer<T>): Promise<TMakeTileFunction<T>> {
-  const pool = pg.Pool({
-    totalCount: 100,
+}: TileServerConfig<T>): Promise<TileRenderer<T>> {
+  const pool = new pg.Pool({
+    max: 100,
+    ...pgPoolOptions,
   });
   pool.on('error', err => {
     console.error('Unexpected error on idle client', err);
@@ -38,10 +39,10 @@ export async function Server<T>({
     x,
     y,
     table = 'public.points',
-    geometry = 'location',
+    geometry = 'wkb_geometry',
     filters = null,
     id = '',
-  }: IMakeTileProps<T>) => {
+  }: TileInput<T>) => {
     try {
       const filtersQuery = !!filtersToWhere ? filtersToWhere(filters) : [];
 
