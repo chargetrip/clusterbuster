@@ -43,7 +43,7 @@ export async function Server<T>({
     id = '',
   }: IMakeTileProps<T>) => {
     try {
-      const filtersQuery = filtersToWhere(filters);
+      const filtersQuery = !!filtersToWhere ? filtersToWhere(filters) : [];
 
       console.time('query' + id);
       const cacheKey = `${z}, ${x}, ${y}, ${filtersQuery.join(', ')}`;
@@ -68,6 +68,7 @@ export async function Server<T>({
         );
         console.timeEnd('query' + id);
 
+        console.time('gzip' + id);
         const tile = await zip(result.rows[0].mvt);
         console.timeEnd('gzip' + id);
 
