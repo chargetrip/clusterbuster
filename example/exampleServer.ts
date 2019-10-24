@@ -1,20 +1,19 @@
+require('dotenv').config();
 const express = require('express');
 const uuid = require('uuid');
 
-const port = 80;
+const port = 3005;
 
-const table = 'public.stations';
-const geometry = 'wkb_geometry';
+const table = 'public.stations_5cee916f930d9566c106e9be';
+const geometry = 'location';
 const maxZoomLevel = 12;
 
 const supertiler = require('../dist');
 supertiler({
   maxZoomLevel,
-  geometry,
-  table,
   resolution: 512, // Mapbox default, try 256 if you are unsure what your mapping front-end library uses
   attributes: ['status'],
-  urlQueryToSql: filters => {
+  filters: filters => {
     const whereStatements = [];
     if (filters.status) {
       whereStatements.push(`status = '${filters.status}'`);
@@ -41,6 +40,8 @@ supertiler({
       x: req.params.x,
       y: req.params.y,
       query: req.query,
+      table,
+      geometry,
       id: req.id,
     })
       .then(result => {
