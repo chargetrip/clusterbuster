@@ -7,7 +7,6 @@
   "repository": "https://github.com/chargetrip/clusterbuster",
   "author": "Bartol Karuza",
   "license": "MIT",
-  "private": true,
   "scripts": {
     "build": "rollup --config rollup.config.js",
     "start": "yarn build && ts-node example/exampleServer.ts",
