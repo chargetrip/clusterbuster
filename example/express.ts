@@ -8,8 +8,8 @@ const table = 'public.points';
 const geometry = 'wkb_geometry';
 const maxZoomLevel = 12;
 
-const supertiler = require('../dist');
-supertiler({
+const buster = require('../dist');
+buster({
   maxZoomLevel,
   resolution: 512,
   attributes: ['status'],

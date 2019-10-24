@@ -19,13 +19,13 @@ export interface TileServerConfig<T> {
 
   /**
    * @description LRU tile cache options, each tile request is stored in this cache.
-   * super-tiler tries to provide sane defaults
+   * clusterbuster tries to provide sane defaults
    */
   cacheOptions?: Options;
 
   /**
    * @description Configuration options for the postgres connection pool
-   * super-tiler tries to provide sane defaults
+   * clusterbuster tries to provide sane defaults
    */
   pgPoolOptions?: PoolConfig;
 

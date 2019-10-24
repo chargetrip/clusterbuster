@@ -1,10 +1,10 @@
 {
-  "name": "supertiler",
+  "name": "clusterbuster",
   "version": "0.0.9",
   "description": "MVT map tiling server with built-in clustering and filtering",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "repository": "https://github.com/chargetrip/super-tiler",
+  "repository": "https://github.com/chargetrip/clusterbuster",
   "author": "Bartol Karuza",
   "license": "MIT",
   "private": true,
