@@ -7,12 +7,12 @@ import dts from 'rollup-plugin-dts';
 
 export default [
   {
-    input: './js/server.ts',
+    input: './src/index.ts',
     output: [{ file: 'dist/index.d.ts', format: 'es' }],
     plugins: [dts()],
   },
   {
-    input: './js/server.ts',
+    input: './src/index.ts',
     output: {
       file: 'dist/index.js',
       format: 'cjs',

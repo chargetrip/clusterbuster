@@ -26,6 +26,7 @@
     "@babel/preset-env": "^7.6.3",
     "@babel/preset-typescript": "^7.6.0",
     "@types/node": "^12.11.5",
+    "@types/lru-cache": "^4.1.0",
     "express": "^4.17.1",
     "rollup": "^1.25.2",
     "rollup-plugin-babel": "^4.3.3",
