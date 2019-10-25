@@ -23,108 +23,126 @@ with filtered AS
 
     
     clustered_9 AS
-        (SELECT center,
+        (SELECT center, 
+            
             theCount,
             ST_ClusterDBSCAN(center, 0.01953125, 1) over () as clusters , a
         FROM grouped_clusters_10),
     grouped_clusters_9 AS
         (SELECT SUM(theCount) as theCount,
+            ST_Extent(center) as bbox,
             FIRST(a) as a,
             ST_Centroid(ST_Collect(center)) as center
         FROM clustered_9
         GROUP BY clusters),
 
     clustered_8 AS
-        (SELECT center,
+        (SELECT center, 
+            bbox,
             theCount,
             ST_ClusterDBSCAN(center, 0.0390625, 1) over () as clusters , a
         FROM grouped_clusters_9),
     grouped_clusters_8 AS
         (SELECT SUM(theCount) as theCount,
+            ST_Extent(bbox) as bbox,
             FIRST(a) as a,
             ST_Centroid(ST_Collect(center)) as center
         FROM clustered_8
         GROUP BY clusters),
 
     clustered_7 AS
-        (SELECT center,
+        (SELECT center, 
+            bbox,
             theCount,
             ST_ClusterDBSCAN(center, 0.078125, 1) over () as clusters , a
         FROM grouped_clusters_8),
     grouped_clusters_7 AS
         (SELECT SUM(theCount) as theCount,
+            ST_Extent(bbox) as bbox,
             FIRST(a) as a,
             ST_Centroid(ST_Collect(center)) as center
         FROM clustered_7
         GROUP BY clusters),
 
     clustered_6 AS
-        (SELECT center,
+        (SELECT center, 
+            bbox,
             theCount,
             ST_ClusterDBSCAN(center, 0.15625, 1) over () as clusters , a
         FROM grouped_clusters_7),
     grouped_clusters_6 AS
         (SELECT SUM(theCount) as theCount,
+            ST_Extent(bbox) as bbox,
             FIRST(a) as a,
             ST_Centroid(ST_Collect(center)) as center
         FROM clustered_6
         GROUP BY clusters),
 
     clustered_5 AS
-        (SELECT center,
+        (SELECT center, 
+            bbox,
             theCount,
             ST_ClusterDBSCAN(center, 0.3125, 1) over () as clusters , a
         FROM grouped_clusters_6),
     grouped_clusters_5 AS
         (SELECT SUM(theCount) as theCount,
+            ST_Extent(bbox) as bbox,
             FIRST(a) as a,
             ST_Centroid(ST_Collect(center)) as center
         FROM clustered_5
         GROUP BY clusters),
 
     clustered_4 AS
-        (SELECT center,
+        (SELECT center, 
+            bbox,
             theCount,
             ST_ClusterDBSCAN(center, 0.625, 1) over () as clusters , a
         FROM grouped_clusters_5),
     grouped_clusters_4 AS
         (SELECT SUM(theCount) as theCount,
+            ST_Extent(bbox) as bbox,
             FIRST(a) as a,
             ST_Centroid(ST_Collect(center)) as center
         FROM clustered_4
         GROUP BY clusters),
 
     clustered_3 AS
-        (SELECT center,
+        (SELECT center, 
+            bbox,
             theCount,
             ST_ClusterDBSCAN(center, 1.25, 1) over () as clusters , a
         FROM grouped_clusters_4),
     grouped_clusters_3 AS
         (SELECT SUM(theCount) as theCount,
+            ST_Extent(bbox) as bbox,
             FIRST(a) as a,
             ST_Centroid(ST_Collect(center)) as center
         FROM clustered_3
         GROUP BY clusters),
 
     clustered_2 AS
-        (SELECT center,
+        (SELECT center, 
+            bbox,
             theCount,
             ST_ClusterDBSCAN(center, 2.5, 1) over () as clusters , a
         FROM grouped_clusters_3),
     grouped_clusters_2 AS
         (SELECT SUM(theCount) as theCount,
+            ST_Extent(bbox) as bbox,
             FIRST(a) as a,
             ST_Centroid(ST_Collect(center)) as center
         FROM clustered_2
         GROUP BY clusters),
 
     clustered_1 AS
-        (SELECT center,
+        (SELECT center, 
+            bbox,
             theCount,
             ST_ClusterDBSCAN(center, 5, 1) over () as clusters , a
         FROM grouped_clusters_2),
     grouped_clusters_1 AS
         (SELECT SUM(theCount) as theCount,
+            ST_Extent(bbox) as bbox,
             FIRST(a) as a,
             ST_Centroid(ST_Collect(center)) as center
         FROM clustered_1
@@ -132,13 +150,14 @@ with filtered AS
 
      tiled as
     (SELECT center,
+            ST_AsGeoJSON(bbox) as bbox,
             theCount , a
      FROM grouped_clusters_1
      WHERE ST_Intersects(TileBBox(1, 0, 1, 3857), ST_Transform(center, 3857))),
      q as
     (SELECT 1 as c1,
             ST_AsMVTGeom(ST_Transform(center, 3857), TileBBox(1, 0, 1, 3857), 512, 10, false) AS geom,
-            jsonb_build_object('count', theCount, 'a', a) as attributes
+            jsonb_build_object('count', theCount, 'bbox', bbox, 'a', a) as attributes
      FROM tiled)
 SELECT ST_AsMVT(q, 'stations', 512, 'geom') as mvt
 from q
