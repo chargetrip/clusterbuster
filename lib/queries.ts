@@ -39,6 +39,7 @@ const unclusteredQuery = ({
   z,
   table,
   geometry,
+  sourceLayer,
   resolution,
   attributes,
   query,
@@ -57,7 +58,7 @@ WITH filtered AS
               attributes
             )}) as attributes
      FROM filtered)
-SELECT ST_AsMVT(q, 'stations', ${resolution}, 'geom') as mvt
+SELECT ST_AsMVT(q, '${sourceLayer}', ${resolution}, 'geom') as mvt
 from q
 `;
 
@@ -67,6 +68,7 @@ const base_query = ({
   z,
   x,
   y,
+  sourceLayer,
   resolution,
   attributes = [],
 }) => `
@@ -86,7 +88,7 @@ with filtered AS
               attributes
             )}) as attributes
      FROM tiled)
-SELECT ST_AsMVT(q, 'stations', ${resolution}, 'geom') as mvt
+SELECT ST_AsMVT(q, '${sourceLayer}', ${resolution}, 'geom') as mvt
 from q
 `;
 
@@ -143,6 +145,7 @@ export function createQueryForTile({
   maxZoomLevel,
   table,
   geometry,
+  sourceLayer,
   resolution,
   attributes,
   query,
@@ -170,6 +173,7 @@ export function createQueryForTile({
       z,
       x,
       y,
+      sourceLayer,
       additionalLevels,
       resolution,
       attributes,
@@ -183,6 +187,7 @@ export function createQueryForTile({
       z,
       table,
       geometry,
+      sourceLayer,
       resolution,
       attributes,
       query,

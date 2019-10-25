@@ -15,6 +15,11 @@ export interface TileInput<T> extends TileRequest {
   geometry?: string;
 
   /**
+   * @description The source layer on which the points are rendered, default is points
+   */
+  sourceLayer?: string;
+
+  /**
    * @description The filters to apply, default is none
    */
   filters?: T;
