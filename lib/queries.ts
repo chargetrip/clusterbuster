@@ -53,7 +53,7 @@ WITH filtered AS
     q as
     (SELECT 1 as c1,
             ST_AsMVTGeom(ST_Transform(${geometry}, 3857), TileBBox(${z}, ${x}, ${y}, 3857), ${resolution}, 10, false) AS geom,
-            jsonb_build_object('count', 1${attributesToArray(
+            jsonb_build_object('count', 1, 'bbox', ST_AsGeoJSON(${geometry})${attributesToArray(
               attributes
             )}) as attributes
      FROM filtered)

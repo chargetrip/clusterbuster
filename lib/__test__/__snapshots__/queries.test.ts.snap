@@ -175,7 +175,7 @@ WITH filtered AS
     q as
     (SELECT 1 as c1,
             ST_AsMVTGeom(ST_Transform(wkb_geometry, 3857), TileBBox(15, 0, 1, 3857), 512, 10, false) AS geom,
-            jsonb_build_object('count', 1, 'a', a) as attributes
+            jsonb_build_object('count', 1, 'bbox', ST_AsGeoJSON(wkb_geometry), 'a', a) as attributes
      FROM filtered)
 SELECT ST_AsMVT(q, 'stations', 512, 'geom') as mvt
 from q
