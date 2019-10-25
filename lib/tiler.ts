@@ -40,6 +40,7 @@ export async function TileServer<T>({
     y,
     table = 'public.points',
     geometry = 'wkb_geometry',
+    sourceLayer = 'points',
     filters = null,
     id = '',
   }: TileInput<T>) => {
@@ -62,6 +63,7 @@ export async function TileServer<T>({
             maxZoomLevel,
             table,
             geometry,
+            sourceLayer,
             resolution,
             attributes,
             query: filtersQuery,
