@@ -13,7 +13,7 @@ buster({
   maxZoomLevel,
   resolution: 512,
   attributes: ['status'],
-  filters: filters => {
+  filtersToWhere: filters => {
     const whereStatements = [];
     if (filters.status) {
       whereStatements.push(`status = '${filters.status}'`);
