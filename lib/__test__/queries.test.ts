@@ -1,4 +1,4 @@
-const { createQueryForTile } = require('../createClusterQuery');
+const { createQueryForTile } = require('../queries');
 
 describe('createClusterQuery', () => {
   it('should create a clustered Query', () => {
@@ -9,6 +9,7 @@ describe('createClusterQuery', () => {
         y: 1,
         table: 'public.stations',
         geometry: 'wkb_geometry',
+        sourceLayer: 'points',
         maxZoomLevel: 10,
         resolution: 512,
         attributes: ['a'],
@@ -25,6 +26,7 @@ describe('createClusterQuery', () => {
         y: 1,
         table: 'public.stations',
         geometry: 'wkb_geometry',
+        sourceLayer: 'points',
         maxZoomLevel: 10,
         resolution: 512,
         attributes: ['a'],
@@ -33,8 +35,3 @@ describe('createClusterQuery', () => {
     ).toMatchSnapshot();
   });
 });
-// http://localhost:3005/stations/13/4400/2687/tile.mvt
-// http://localhost:3005/stations/14/8609/5642/tile.mvt
-// http://localhost:3005/stations/1/0/1/tile.mvt
-
-// 9/284/168/tile.mvt

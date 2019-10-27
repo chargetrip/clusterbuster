@@ -1,20 +1,19 @@
+require('dotenv').config();
 const express = require('express');
 const uuid = require('uuid');
 
-const port = 80;
+const port = 3005;
 
-const table = 'public.stations';
+const table = 'public.points';
 const geometry = 'wkb_geometry';
 const maxZoomLevel = 12;
 
-const supertiler = require('../dist');
-supertiler({
+const buster = require('../dist');
+buster({
   maxZoomLevel,
-  geometry,
-  table,
-  resolution: 512, // Mapbox default, try 256 if you are unsure what your mapping front-end library uses
+  resolution: 512,
   attributes: ['status'],
-  urlQueryToSql: filters => {
+  filtersToWhere: filters => {
     const whereStatements = [];
     if (filters.status) {
       whereStatements.push(`status = '${filters.status}'`);
@@ -23,17 +22,17 @@ supertiler({
       whereStatements.push(`speed = '${filters.speed}'`);
     }
     return whereStatements;
-  }
+  },
 }).then(server => {
   const app = express();
-  app.use((req, res, next) => {
+  app.use((_, res, next) => {
     res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
     next();
   });
-  app.get('/health', (req, res) => {
+  app.get('/health', (_, res) => {
     res.status(200).send('OK');
   });
-  app.get('/stations/:z/:x/:y/tile.mvt', (req, res) => {
+  app.get('/points/:z/:x/:y/tile.mvt', (req, res) => {
     req.id = uuid.v4();
     console.time(req.id);
     server({
@@ -41,6 +40,8 @@ supertiler({
       x: req.params.x,
       y: req.params.y,
       query: req.query,
+      table,
+      geometry,
       id: req.id,
     })
       .then(result => {

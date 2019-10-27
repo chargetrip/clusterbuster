@@ -1,60 +1,55 @@
-require('dotenv').config();
+import LRU, { Options } from 'lru-cache';
 import pg from 'pg';
-import zlib from 'zlib';
-import LRU from 'lru-cache';
-import { createQueryForTile } from './createClusterQuery';
+import { TileRenderer, TileInput, TileServerConfig } from '../types';
+import { createQueryForTile } from './queries';
 import createSupportingSQLFunctions from './supporting';
-const options = {
-  max: 100000,
-  length: function(n, key) {
-    return n * 2 + key.length;
-  },
-  maxAge: 1000 * 60 * 60,
-};
+import { zip } from './zip';
 
-const cache = new LRU(options);
-
-interface IServer {
-  maxZoomLevel: number;
-  table: string;
-  geometry: string;
-  resolution: number;
-  urlQueryToSql: (filters: any) => string[];
-  attributes: string[];
-}
-
-interface IMakeTileProps {
-  z: number;
-  x: number;
-  y: number;
-  query: Object;
-  id: string;
-}
-
-type IMakeTileFunction = (prop: IMakeTileProps) => Promise<ArrayBuffer>;
-
-export default async function Server({
-  maxZoomLevel,
-  table,
-  geometry,
-  resolution,
-  attributes,
-  urlQueryToSql,
-}: IServer): Promise<IMakeTileFunction> {
-  const pool = pg.Pool({
-    totalCount: 100,
+export async function TileServer<T>({
+  maxZoomLevel = 12,
+  resolution = 512,
+  cacheOptions = {},
+  pgPoolOptions = {},
+  filtersToWhere = null,
+  attributes = [],
+}: TileServerConfig<T>): Promise<TileRenderer<T>> {
+  const pool = new pg.Pool({
+    max: 100,
+    ...pgPoolOptions,
   });
-  pool.on('error', (err, client) => {
+  pool.on('error', err => {
     console.error('Unexpected error on idle client', err);
     process.exit(-1);
   });
 
+  const options: Options = {
+    max: 100000,
+    length: function(n, key) {
+      return n * 2 + key.length;
+    },
+    maxAge: 1000 * 60 * 60,
+  };
+
+  const cache = new LRU({ ...options, ...cacheOptions });
+
   await createSupportingSQLFunctions(pool);
 
-  return async ({ z, x, y, id, query }: IMakeTileProps) => {
+  return async ({
+    z,
+    x,
+    y,
+    table = 'public.points',
+    geometry = 'wkb_geometry',
+    sourceLayer = 'points',
+    filters = null,
+    id = '',
+  }: TileInput<T>) => {
     try {
+      const filtersQuery = !!filtersToWhere ? filtersToWhere(filters) : [];
+
       console.time('query' + id);
-      const value = cache.get(`${z}, ${x}, ${y}`);
+      const cacheKey = `${z}, ${x}, ${y}, ${filtersQuery.join(', ')}`;
+      const value = cache.get(cacheKey);
       if (value) {
         return value;
       }
@@ -68,26 +63,21 @@ export default async function Server({
             maxZoomLevel,
             table,
             geometry,
+            sourceLayer,
             resolution,
             attributes,
-            query: urlQueryToSql(query),
+            query: filtersQuery,
           })
         );
-
         console.timeEnd('query' + id);
 
-        return await new Promise((resolve, reject) => {
-          console.time('gzip' + id);
-          zlib.gzip(result.rows[0].mvt, (err, result) => {
-            if (!err) {
-              cache.set(`${z}, ${x}, ${y}`, result);
-              resolve(result);
-              console.timeEnd('gzip' + id);
-            } else {
-              reject(err);
-            }
-          });
-        });
+        console.time('gzip' + id);
+        const tile = await zip(result.rows[0].mvt);
+        console.timeEnd('gzip' + id);
+
+        cache.set(cacheKey, tile);
+
+        return tile;
       } catch (e) {
         console.log({ e });
       }

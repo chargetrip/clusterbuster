@@ -1,3 +1,5 @@
+import { IQueryInput } from './types/IQueryInput';
+
 const filterBlock = ({
   x,
   y,
@@ -37,9 +39,10 @@ const unclusteredQuery = ({
   z,
   table,
   geometry,
+  sourceLayer,
   resolution,
   attributes,
-  query
+  query,
 }) =>
   `
 WITH filtered AS
@@ -55,7 +58,7 @@ WITH filtered AS
               attributes
             )}) as attributes
      FROM filtered)
-SELECT ST_AsMVT(q, 'stations', ${resolution}, 'geom') as mvt
+SELECT ST_AsMVT(q, '${sourceLayer}', ${resolution}, 'geom') as mvt
 from q
 `;
 
@@ -65,6 +68,7 @@ const base_query = ({
   z,
   x,
   y,
+  sourceLayer,
   resolution,
   attributes = [],
 }) => `
@@ -83,7 +87,7 @@ with filtered AS
               attributes
             )}) as attributes
      FROM tiled)
-SELECT ST_AsMVT(q, 'stations', ${resolution}, 'geom') as mvt
+SELECT ST_AsMVT(q, '${sourceLayer}', ${resolution}, 'geom') as mvt
 from q
 `;
 
@@ -119,18 +123,6 @@ const attributesToArray = attributes =>
       attributes.map(attribute => `'${attribute}', ${attribute}`).join(', ')
     : '';
 
-interface ICreateQueryForTileProps {
-  z: number;
-  x: number;
-  y: number;
-  maxZoomLevel: number;
-  table: string;
-  geometry: string;
-  resolution: number;
-  attributes: string[];
-  query: string[];
-}
-
 export function createQueryForTile({
   z,
   x,
@@ -138,10 +130,11 @@ export function createQueryForTile({
   maxZoomLevel,
   table,
   geometry,
+  sourceLayer,
   resolution,
   attributes,
   query,
-}: ICreateQueryForTileProps) {
+}: IQueryInput) {
   if (z < maxZoomLevel) {
     let additionalLevels = '';
     for (let i = maxZoomLevel - 1; i >= z; --i) {
@@ -164,6 +157,7 @@ export function createQueryForTile({
       z,
       x,
       y,
+      sourceLayer,
       additionalLevels,
       resolution,
       attributes,
@@ -177,9 +171,10 @@ export function createQueryForTile({
       z,
       table,
       geometry,
+      sourceLayer,
       resolution,
       attributes,
-      query
+      query,
     });
     // console.log(ret);
     return ret;
