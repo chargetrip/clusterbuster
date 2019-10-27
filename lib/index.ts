@@ -1,3 +1,3 @@
-import { TileServer } from './tiler';
+import { TileServer } from './server';
 export * from '../types';
 export default TileServer;
