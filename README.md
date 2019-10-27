@@ -13,7 +13,7 @@ buster({
   maxZoomLevel,
   resolution: 512,
   attributes: ['status', 'speed'],
-  filters: filters => {
+  filtersToWhere: filters => {
     const whereStatements = [];
     if (filters.status) {
       whereStatements.push(`status = '${filters.status}'`);
@@ -42,6 +42,37 @@ See the [TileServerConfig](/types/TileServerConfig.ts) for the initial configura
 
 See the [TileRequest](/types/TileRequest.ts) for the per tile request options.
 
+The above example assumes a postgres database with a `public.my_points_table` table matching:
+
+```SQL
+CREATE EXTENSION postgis;
+
+-- Table: public.my_points_table
+CREATE TABLE public.my_points_table
+(
+    id TEXT,
+    my_geometry_column geometry(Point,4326),
+    speed TEXT,
+    status TEXT,
+
+    PRIMARY KEY(id)
+)
+
+TABLESPACE pg_default;
+
+GRANT ALL ON TABLE public.my_points_table TO "tiler";
+```
+
+The internal [postgress client](https://node-postgres.com/) can be configured with the following env vars:
+
+```ENV
+PGUSER=tiler
+PGHOST=localhost
+PGPASSWORD=
+PGDATABASE=points
+PGPORT=5432
+```
+
 ## Internals
 
 The tile server creates clusters using the PostGIS ST_ClusterDBSCAN starting at the maximum zoomlevel and continues clustering iteratively for each zoom level until the zoom level of the tile request is reached. This 'cluster of clusters' clustering algorithm is inspired by the excellent [supercluster](https://github.com/mapbox/supercluster) library, which many people use to cluster on the front-end and even on the back-end (using something like supertiler).
@@ -65,7 +96,7 @@ All of these tile servers and tile generators offer some subset of the functiona
 
 |  Tiler        | dynamic data | filtering | clustering |
 | ------------- | ------------ | --------- | ---------- |
-| clusterbuster |  ✓ | ✓ | ✓
+| clusterbuster |  ✓ | ✓ | ✓ |
 | Martin | ✓ | ✓ | x |
 | Tilestrata | ✓ | x | x |
 | Tegola | ✓ | x | x |
@@ -76,6 +107,10 @@ All of these tile servers and tile generators offer some subset of the functiona
 ## When not to use clusterbuster
 
 - Your data is static (and no filtering is required) - use tippecanoe or supertiler to prerender all tiles and serve from a file hosting service such as S3 (which is much more economical and loads faster to the front-end)
-- Your data needs to be filtered, but not clustered
+- Your data needs to be filtered, but not clustered:
   Using Martin you can implement filtering using PL/pgSQL
 - You don't need filtering or clustering, you just need tiles from a dynamic data set: You can use any of the dynamic tile servers in the table above.
+
+## Sponsors
+
+[![Chargetrip logo](https://chargetrip.com/img/logo-dark@2x.png)](https://www.chargetrip.com)
