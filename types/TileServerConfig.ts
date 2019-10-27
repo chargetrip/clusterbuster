@@ -32,7 +32,7 @@ export interface TileServerConfig<T> {
   /**
    * @description Optional callback to map the filters to where conditions in PostGreSQL
    */
-  filtersToWhere?: (filters: T) => string[];
+  filtersToWhere?: (queryParams: T | {}) => string[];
 
   /**
    * @description Attributes to select from the table

@@ -9,7 +9,7 @@
   "license": "MIT",
   "scripts": {
     "build": "rollup --config rollup.config.js",
-    "start": "yarn build && ts-node example/exampleServer.ts",
+    "start": "yarn build && ts-node example/express.ts",
     "babel": "babel js --out-dir dist --extensions \".ts\" --exclude \"**/__test__/*\"",
     "test": "jest"
   },

@@ -20,9 +20,9 @@ export interface TileInput<T> extends TileRequest {
   sourceLayer?: string;
 
   /**
-   * @description The filters to apply, default is none
+   * @description The query parameters used to filter
    */
-  filters?: T;
+  queryParams?: T | {};
 
   /**
    * @description Unique ID of the request, default is an empty string

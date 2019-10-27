@@ -41,11 +41,11 @@ export async function TileServer<T>({
     table = 'public.points',
     geometry = 'wkb_geometry',
     sourceLayer = 'points',
-    filters = null,
+    queryParams = {},
     id = '',
   }: TileInput<T>) => {
     try {
-      const filtersQuery = !!filtersToWhere ? filtersToWhere(filters) : [];
+      const filtersQuery = !!filtersToWhere ? filtersToWhere(queryParams) : [];
 
       console.time('query' + id);
       const cacheKey = `${z}, ${x}, ${y}, ${filtersQuery.join(', ')}`;

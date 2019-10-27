@@ -26,7 +26,7 @@ buster({
 }).then(server => {
   const app = express();
   app.use((_, res, next) => {
-    res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+    res.header('Access-Control-Allow-Origin', '*');
     next();
   });
   app.get('/health', (_, res) => {
