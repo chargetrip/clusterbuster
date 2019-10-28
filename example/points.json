@@ -1,0 +1,602 @@
+[
+  {
+    "type": "Feature",
+    "id": "0",
+    "geometry": { "type": "Point", "coordinates": [5.446923, 59.420427] },
+    "properties": { "status": "unknown", "speed": "turbo" }
+  },
+  {
+    "type": "Feature",
+    "id": "1",
+    "geometry": { "type": "Point", "coordinates": [6.03816, 59.01665] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "2",
+    "geometry": { "type": "Point", "coordinates": [6.15427, 59.23064] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "3",
+    "geometry": { "type": "Point", "coordinates": [9.99726, 60.56218] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "4",
+    "geometry": { "type": "Point", "coordinates": [5.80516, 58.51955] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "5",
+    "geometry": { "type": "Point", "coordinates": [10.35147, 60.70018] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "6",
+    "geometry": { "type": "Point", "coordinates": [5.62271, 58.88484] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "7",
+    "geometry": { "type": "Point", "coordinates": [5.44962, 60.20526] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "8",
+    "geometry": { "type": "Point", "coordinates": [15.08864, 60.6738] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "9",
+    "geometry": { "type": "Point", "coordinates": [13.721353, 60.686746] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "10",
+    "geometry": { "type": "Point", "coordinates": [8.20767, 62.90934] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "11",
+    "geometry": { "type": "Point", "coordinates": [25.725, 66.49702] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "12",
+    "geometry": { "type": "Point", "coordinates": [6.56425, 58.44932] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "13",
+    "geometry": { "type": "Point", "coordinates": [10.83466, 59.85012] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "14",
+    "geometry": { "type": "Point", "coordinates": [10.82152, 59.90364] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "15",
+    "geometry": { "type": "Point", "coordinates": [10.84307, 59.92508] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "16",
+    "geometry": { "type": "Point", "coordinates": [15.41503, 68.70504] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "17",
+    "geometry": { "type": "Point", "coordinates": [8.13453, 58.17845] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "18",
+    "geometry": { "type": "Point", "coordinates": [24.80287, 60.61862] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "19",
+    "geometry": { "type": "Point", "coordinates": [22.16051, 60.50611] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "20",
+    "geometry": { "type": "Point", "coordinates": [5.30515, 59.37905] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "21",
+    "geometry": { "type": "Point", "coordinates": [9.50253, 63.40045] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "22",
+    "geometry": { "type": "Point", "coordinates": [15.8275, 59.4268] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "23",
+    "geometry": { "type": "Point", "coordinates": [10.04217, 57.45587] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "24",
+    "geometry": { "type": "Point", "coordinates": [10.62029, 60.68438] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "25",
+    "geometry": { "type": "Point", "coordinates": [18.04932, 59.3272] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "26",
+    "geometry": { "type": "Point", "coordinates": [12.51731, 56.93195] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "27",
+    "geometry": { "type": "Point", "coordinates": [11.03422, 60.00459] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "28",
+    "geometry": { "type": "Point", "coordinates": [6.24577, 62.46628] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "29",
+    "geometry": { "type": "Point", "coordinates": [18.04831, 59.28633] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "30",
+    "geometry": { "type": "Point", "coordinates": [10.36138, 59.3073] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "31",
+    "geometry": { "type": "Point", "coordinates": [16.464306, 59.6107] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "32",
+    "geometry": { "type": "Point", "coordinates": [5.46562, 60.42147] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "33",
+    "geometry": { "type": "Point", "coordinates": [15.97362, 59.52123] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "34",
+    "geometry": { "type": "Point", "coordinates": [17.60188, 59.19487] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "35",
+    "geometry": { "type": "Point", "coordinates": [12.0131, 60.6114] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "36",
+    "geometry": { "type": "Point", "coordinates": [8.03953, 58.161] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "37",
+    "geometry": { "type": "Point", "coordinates": [10.71487, 59.92572] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "38",
+    "geometry": { "type": "Point", "coordinates": [10.62222, 59.89778] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "39",
+    "geometry": { "type": "Point", "coordinates": [23.443374, 59.979497] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "40",
+    "geometry": { "type": "Point", "coordinates": [10.9663, 59.23735] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "41",
+    "geometry": { "type": "Point", "coordinates": [17.12052, 60.64853] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "42",
+    "geometry": { "type": "Point", "coordinates": [18.34769, 68.8596] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "43",
+    "geometry": { "type": "Point", "coordinates": [11.14468, 60.31256] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "44",
+    "geometry": { "type": "Point", "coordinates": [5.73401, 58.96544] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "45",
+    "geometry": { "type": "Point", "coordinates": [10.69057, 61.15232] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "46",
+    "geometry": { "type": "Point", "coordinates": [12.31628, 64.46469] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "47",
+    "geometry": { "type": "Point", "coordinates": [11.13572, 60.07273] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "48",
+    "geometry": { "type": "Point", "coordinates": [18.34695, 68.86021] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "49",
+    "geometry": { "type": "Point", "coordinates": [10.92818, 59.98473] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "50",
+    "geometry": { "type": "Point", "coordinates": [5.40798, 60.18554] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "51",
+    "geometry": { "type": "Point", "coordinates": [10.43865, 61.24387] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "52",
+    "geometry": { "type": "Point", "coordinates": [14.97763, 58.03497] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "53",
+    "geometry": { "type": "Point", "coordinates": [14.52311, 62.90982] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "54",
+    "geometry": { "type": "Point", "coordinates": [16.556916, 59.616629] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "55",
+    "geometry": { "type": "Point", "coordinates": [11.68034, 58.23693] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "56",
+    "geometry": { "type": "Point", "coordinates": [6.53882, 58.46089] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "57",
+    "geometry": { "type": "Point", "coordinates": [5.17248, 59.79495] },
+    "properties": { "status": "free", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "58",
+    "geometry": { "type": "Point", "coordinates": [11.820531, 58.142881] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "59",
+    "geometry": { "type": "Point", "coordinates": [13.0237, 55.59932] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "60",
+    "geometry": { "type": "Point", "coordinates": [10.72313, 59.94838] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "61",
+    "geometry": { "type": "Point", "coordinates": [13.53394, 59.40165] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "62",
+    "geometry": { "type": "Point", "coordinates": [11.475356, 58.17797] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "63",
+    "geometry": { "type": "Point", "coordinates": [5.79782, 60.58338] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "64",
+    "geometry": { "type": "Point", "coordinates": [10.80913, 59.94197] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "65",
+    "geometry": { "type": "Point", "coordinates": [5.73074, 60.40096] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "66",
+    "geometry": { "type": "Point", "coordinates": [10.2577, 59.76608] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "67",
+    "geometry": { "type": "Point", "coordinates": [17.36871, 58.9183] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "68",
+    "geometry": { "type": "Point", "coordinates": [10.9553, 59.32416] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "69",
+    "geometry": { "type": "Point", "coordinates": [10.44427, 63.41621] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "70",
+    "geometry": { "type": "Point", "coordinates": [9.92672, 60.23966] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "71",
+    "geometry": { "type": "Point", "coordinates": [9.764664, 55.511293] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "72",
+    "geometry": { "type": "Point", "coordinates": [10.05782, 56.432092] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "73",
+    "geometry": { "type": "Point", "coordinates": [8.93798, 60.70117] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "74",
+    "geometry": { "type": "Point", "coordinates": [6.12735, 58.52703] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "75",
+    "geometry": { "type": "Point", "coordinates": [11.720878, 58.125422] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "76",
+    "geometry": { "type": "Point", "coordinates": [12.80095, 58.04094] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "77",
+    "geometry": { "type": "Point", "coordinates": [11.56028, 60.88317] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "78",
+    "geometry": { "type": "Point", "coordinates": [5.64763, 58.99155] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "79",
+    "geometry": { "type": "Point", "coordinates": [14.15159, 56.03045] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "80",
+    "geometry": { "type": "Point", "coordinates": [20.19011, 63.84083] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "81",
+    "geometry": { "type": "Point", "coordinates": [12.12678, 57.96185] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "82",
+    "geometry": { "type": "Point", "coordinates": [13.93371, 56.8314] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "83",
+    "geometry": { "type": "Point", "coordinates": [11.9334, 57.65992] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "84",
+    "geometry": { "type": "Point", "coordinates": [10.25136, 60.14809] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "85",
+    "geometry": { "type": "Point", "coordinates": [7.53268, 59.21306] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "86",
+    "geometry": { "type": "Point", "coordinates": [13.46808, 59.38146] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "87",
+    "geometry": { "type": "Point", "coordinates": [13.12825, 59.8372] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "88",
+    "geometry": { "type": "Point", "coordinates": [8.48958, 59.40167] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "89",
+    "geometry": { "type": "Point", "coordinates": [11.08525, 59.27517] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "90",
+    "geometry": { "type": "Point", "coordinates": [12.59312, 59.66943] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "91",
+    "geometry": { "type": "Point", "coordinates": [15.39072, 67.25916] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "92",
+    "geometry": { "type": "Point", "coordinates": [11.8106, 58.35173] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "93",
+    "geometry": { "type": "Point", "coordinates": [18.07057, 59.3274] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "94",
+    "geometry": { "type": "Point", "coordinates": [8.96162, 60.70175] },
+    "properties": { "status": "unknown", "speed": "turbo" }
+  },
+  {
+    "type": "Feature",
+    "id": "95",
+    "geometry": { "type": "Point", "coordinates": [8.94735, 60.26698] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "96",
+    "geometry": { "type": "Point", "coordinates": [5.57623, 59.50114] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "97",
+    "geometry": { "type": "Point", "coordinates": [11.03461, 59.9561] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "98",
+    "geometry": { "type": "Point", "coordinates": [8.29749, 58.23948] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  },
+  {
+    "type": "Feature",
+    "id": "99",
+    "geometry": { "type": "Point", "coordinates": [6.95888, 58.31504] },
+    "properties": { "status": "unknown", "speed": "fast" }
+  }
+]
