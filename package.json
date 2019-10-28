@@ -17,7 +17,6 @@
     "lru-cache": "^5.1.1",
     "pg": "^7.12.1",
     "redis": "^2.8.0",
-    "hiredis": "^0.5.0",
     "sha1": "^1.1.1"
   },
   "devDependencies": {
