@@ -53,6 +53,27 @@ export async function initCache(
 }
 
 /**
+ * @description Close the cache system
+ *
+ * @param {TileCacheOptions} options The cache options
+ */
+export async function closeCache(
+  options: TileCacheOptions = defaultCacheOptions
+): Promise<void> {
+  if (!options.enable) {
+    return;
+  }
+
+  if (options.type === 'lru-cache') {
+    // Nothing to do here
+  } else if (options.type === 'redis') {
+    await new Promise((resolve, reject) =>
+      redisCache.quit(error => (!error ? resolve() : reject(error)))
+    );
+  }
+}
+
+/**
  * @description Get the cache key for a table, tile data and filters set
  *
  * @param {string} table The cache table name

@@ -1,3 +1,4 @@
-import { TileServer } from './tiler';
+import { closeCache, initCache, invalidateCacheOfGPS } from './cache';
+export { TileServer } from './tiler';
 export * from '../types';
-export { TileServer };
+export { closeCache, initCache, invalidateCacheOfGPS };
