@@ -1,6 +1,12 @@
-import LRU, { Options } from 'lru-cache';
 import pg from 'pg';
-import { TileRenderer, TileInput, TileServerConfig } from '../types';
+import { TileInput, TileRenderer, TileServerConfig } from '../types';
+import {
+  defaultCacheOptions,
+  getCacheKey,
+  getCacheValue,
+  initCache,
+  setCacheValue,
+} from './cache';
 import { createQueryForTile } from './queries';
 import createSupportingSQLFunctions from './supporting';
 import { zip } from './zip';
@@ -8,7 +14,7 @@ import { zip } from './zip';
 export async function TileServer<T>({
   maxZoomLevel = 12,
   resolution = 512,
-  cacheOptions = {},
+  cacheOptions = defaultCacheOptions,
   pgPoolOptions = {},
   filtersToWhere = null,
   attributes = [],
@@ -22,16 +28,7 @@ export async function TileServer<T>({
     process.exit(-1);
   });
 
-  const options: Options = {
-    max: 100000,
-    length: function(n, key) {
-      return n * 2 + key.length;
-    },
-    maxAge: 1000 * 60 * 60,
-  };
-
-  const cache = new LRU({ ...options, ...cacheOptions });
-
+  await initCache(cacheOptions);
   await createSupportingSQLFunctions(pool);
 
   return async ({
@@ -48,8 +45,8 @@ export async function TileServer<T>({
       const filtersQuery = !!filtersToWhere ? filtersToWhere(queryParams) : [];
 
       console.time('query' + id);
-      const cacheKey = `${z}, ${x}, ${y}, ${filtersQuery.join(', ')}`;
-      const value = cache.get(cacheKey);
+      const cacheKey = getCacheKey(table, z, x, y, filtersQuery);
+      const value = await getCacheValue(cacheKey, cacheOptions);
       if (value) {
         return value;
       }
@@ -75,7 +72,7 @@ export async function TileServer<T>({
         const tile = await zip(result.rows[0].mvt);
         console.timeEnd('gzip' + id);
 
-        cache.set(cacheKey, tile);
+        await setCacheValue(cacheKey, tile, cacheOptions);
 
         return tile;
       } catch (e) {

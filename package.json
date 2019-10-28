@@ -13,6 +13,13 @@
     "babel": "babel js --out-dir dist --extensions \".ts\" --exclude \"**/__test__/*\"",
     "test": "jest"
   },
+  "dependencies": {
+    "lru-cache": "^5.1.1",
+    "pg": "^7.12.1",
+    "redis": "^2.8.0",
+    "hiredis": "^0.5.0",
+    "sha1": "^1.1.1"
+  },
   "devDependencies": {
     "@babel/cli": "^7.6.4",
     "@babel/core": "^7.6.4",
@@ -22,11 +29,11 @@
     "@types/lru-cache": "^4.1.0",
     "@types/node": "^12.11.5",
     "@types/pg": "^7.11.2",
+    "@types/redis": "^2.8.6",
+    "@types/sha1": "^1.1.1",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "jest": "^24.9.0",
-    "lru-cache": "^5.1.1",
-    "pg": "^7.12.1",
     "rollup": "^1.25.2",
     "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-commonjs": "^10.1.0",
