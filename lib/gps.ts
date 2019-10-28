@@ -30,7 +30,7 @@ export function gps2tile(
 ): { z: number; x: number; y: number } {
   return {
     z: zoom,
-    x: latitude2tile(latitude, zoom),
-    y: longitude2tile(longitude, zoom),
+    x: longitude2tile(longitude, zoom),
+    y: latitude2tile(latitude, zoom),
   };
 }
