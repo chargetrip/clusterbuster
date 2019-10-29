@@ -36,7 +36,7 @@ TileServer({
 });
 ```
 
-See the [express.js example](/example/express.js) for a fully functioning server that exposes the above tile server on a REST endpoint. 
+See the [express.js example](/example) for a fully functioning server that exposes the above tile server on a REST endpoint. 
 
 See the [TileServerConfig](/types/TileServerConfig.ts) for the initial configuration options, to configure the cache, connection pool, filters, etc..
 
