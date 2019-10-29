@@ -8,17 +8,17 @@ const table = 'public.points';
 const geometry = 'wkb_geometry';
 const maxZoomLevel = 12;
 
-const buster = require('../dist');
-buster({
+const { TileServer } = require('../dist');
+TileServer({
   maxZoomLevel,
   resolution: 512,
-  attributes: ['status'],
+  attributes: ['status', 'speed'],
   filtersToWhere: filters => {
     const whereStatements = [];
-    if (filters.status) {
+    if (!!filters && !!filters.status) {
       whereStatements.push(`status = '${filters.status}'`);
     }
-    if (filters.speed) {
+    if (!!filters && !!filters.speed) {
       whereStatements.push(`speed = '${filters.speed}'`);
     }
     return whereStatements;

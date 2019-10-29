@@ -7,8 +7,8 @@ Clusterbuster is a tile server that produces map tiles (in MVT format) from a ta
 Clusterbuster is designed to be used in a NodeJS server connected to a PostgreSQL database, with PostGIS extensions installed. You have to bring your own web framework, allowing clusterbuster to be easily integrated in any existing API that uses express.js, Koa, Hapi, etc..
 
 ```Javascript
-const buster = require('clusterbuster');
-buster({
+const { TileServer } = require('clusterbuster');
+TileServer({
     // types/TileServerConfig.ts
   maxZoomLevel,
   resolution: 512,
