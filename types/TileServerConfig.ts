@@ -1,5 +1,5 @@
-import { Options } from 'lru-cache';
 import { PoolConfig } from 'pg';
+import { TileCacheOptions } from './TileCache';
 
 /**
  * @description Configuration options for the tile server
@@ -21,7 +21,7 @@ export interface TileServerConfig<T> {
    * @description LRU tile cache options, each tile request is stored in this cache.
    * clusterbuster tries to provide sane defaults
    */
-  cacheOptions?: Options;
+  cacheOptions?: TileCacheOptions;
 
   /**
    * @description Configuration options for the postgres connection pool
