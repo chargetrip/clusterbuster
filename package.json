@@ -13,11 +13,8 @@
     "babel": "babel js --out-dir dist --extensions \".ts\" --exclude \"**/__test__/*\"",
     "test": "jest"
   },
-  "dependencies": {
-    "lru-cache": "^5.1.1",
-    "pg": "^7.12.1",
-    "redis": "^2.8.0",
-    "sha1": "^1.1.1"
+  "peerDependencies": {
+    "redis": "^2.8.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.6.4",
@@ -33,6 +30,8 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "jest": "^24.9.0",
+    "lru-cache": "^5.1.1",
+    "pg": "^7.12.1",
     "rollup": "^1.25.2",
     "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-commonjs": "^10.1.0",
@@ -42,6 +41,8 @@
     "rollup-plugin-run": "^1.1.0",
     "ts-node": "^8.4.1",
     "typescript": "^3.6.4",
+    "redis": "^2.8.0",
+    "sha1": "^1.1.1",
     "uuid": "^3.3.3"
   }
 }
