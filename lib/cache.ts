@@ -120,7 +120,7 @@ export async function getCacheValue(
   }
 
   if (options.type === 'lru-cache') {
-    return lruCache.get(key);
+    return lruCache.get(`${key}-${filtersKey}`);
   }
 
   if (options.type === 'redis') {
@@ -157,7 +157,7 @@ export async function setCacheValue(
   }
 
   if (options.type === 'lru-cache') {
-    lruCache.set(key);
+    lruCache.set(`${key}-${filtersKey}`);
 
     return;
   }
