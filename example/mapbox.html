@@ -1,49 +1,87 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset='utf-8' />
+  <head>
+    <meta charset="utf-8" />
     <title>Add a vector tile source</title>
-    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
-    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.js'></script>
-    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.css' rel='stylesheet' />
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.js"></script>
+    <link
+      href="https://api.tiles.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.css"
+      rel="stylesheet"
+    />
     <style>
-        body { margin:0; padding:0; }
-        #map { position:absolute; top:0; bottom:0; width:100%; }
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      #map {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script>
+      mapboxgl.accessToken =
+        '<your-api-key-here>';
+      var map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/light-v10',
+        zoom: 7,
+        center: [3.4, 52.2],
+      });
 
-<div id='map'></div>
-<script>
-mapboxgl.accessToken = '<your access token here>';
-var map = new mapboxgl.Map({
-    container: 'map',
-    style: 'mapbox://styles/mapbox/light-v10',
-    zoom: 13,
-    center: [-122.447303, 37.753574]
-});
+      map.on('load', function() {
+        // Change the source to filter
+        map.addSource('points', {
+          type: 'vector',
+          tiles: ['http://localhost:3005/points/{z}/{x}/{y}/tile.mvt'],
+        });
+        map.addLayer({
+          id: 'clusters',
+          type: 'circle',
+          source: 'points',
+          'source-layer': 'points',
+          interactive: true,
+          filter: ['>', ['get', 'count'], 1],
+        });
 
-map.on('load', function () {
+        map.addLayer({
+          id: 'cluster_count',
+          type: 'symbol',
+          source: 'points',
+          'source-layer': `points`,
+          interactive: true,
+          filter: ['>', ['get', 'count'], 1],
 
-    map.addLayer({
-        "id": "terrain-data",
-        "type": "line",
-        "source": {
-            type: 'vector',
-            url: 'mapbox://mapbox.mapbox-terrain-v2'
-        },
-        "source-layer": "contour",
-        "layout": {
-            "line-join": "round",
-            "line-cap": "round"
-        },
-        "paint": {
-            "line-color": "#ff69b4",
-            "line-width": 1
-        }
-    });
-});
-</script>
+          layout: {
+            'text-field': ['get', 'count'],
+            'text-size': 12,
+          },
+          paint: {
+            'text-color': '#ffffff',
+          },
+        });
 
-</body>
+        map.addLayer({
+          id: 'unclustered-point',
+          type: 'circle',
+          source: 'points',
+          filter: ['!', ['has', 'point_count']],
+          paint: {
+            'circle-color': '#11b4da',
+            'circle-radius': 4,
+            'circle-stroke-width': 1,
+            'circle-stroke-color': '#fff',
+          },
+        });
+      });
+    </script>
+  </body>
 </html>
