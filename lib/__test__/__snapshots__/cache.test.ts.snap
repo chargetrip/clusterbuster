@@ -1,7 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`getCacheFiltersKey should generate key 1`] = `"b8a2645298053fb62ea03e27feea6c483d3fd27e"`;
+exports[`getCacheKey should generate key 1`] = `"table-0-1-2-b8a2645298053fb62ea03e27feea6c483d3fd27e"`;
 
-exports[`getCacheFiltersKey should generate key 2`] = `"b8a2645298053fb62ea03e27feea6c483d3fd27e"`;
-
-exports[`getCacheKey should generate key 1`] = `"table-0-1-2"`;
+exports[`getCacheKey should generate key 2`] = `"table-0-1-2-b8a2645298053fb62ea03e27feea6c483d3fd27e"`;
