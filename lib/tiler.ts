@@ -2,7 +2,6 @@ import pg from 'pg';
 import { TileInput, TileRenderer, TileServerConfig } from '../types';
 import {
   defaultCacheOptions,
-  getCacheFiltersKey,
   getCacheKey,
   getCacheValue,
   initCache,
@@ -46,13 +45,8 @@ export async function TileServer<T>({
       const filtersQuery = !!filtersToWhere ? filtersToWhere(queryParams) : [];
 
       console.time('query' + id);
-      const cacheKey = getCacheKey(table, z, x, y);
-      const cacheFiltersKey = getCacheFiltersKey(filtersQuery);
-      const value = await getCacheValue(
-        cacheKey,
-        cacheFiltersKey,
-        cacheOptions
-      );
+      const cacheKey = getCacheKey(table, z, x, y, filtersQuery);
+      const value = await getCacheValue(cacheKey, cacheOptions);
       if (value) {
         return value;
       }
@@ -78,7 +72,7 @@ export async function TileServer<T>({
         const tile = await zip(result.rows[0].mvt);
         console.timeEnd('gzip' + id);
 
-        await setCacheValue(cacheKey, cacheFiltersKey, tile, cacheOptions);
+        await setCacheValue(cacheKey, tile, cacheOptions);
 
         return tile;
       } catch (e) {
