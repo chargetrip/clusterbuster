@@ -20,5 +20,10 @@ export interface TileCacheOptions {
   /**
    * @description Redis connect options
    */
-  redisOptions?: ClientOpts;
+  redisOptions?: ClientOpts & {
+    /**
+     * @description The time to live in seconds. Default is 86400 (1 day)
+     */
+    ttl?: number;
+  };
 }

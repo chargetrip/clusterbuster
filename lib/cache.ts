@@ -21,6 +21,7 @@ export const defaultCacheOptions: TileCacheOptions = {
     maxAge: 1000 * 60 * 60,
   },
   redisOptions: {
+    ttl: 86400, // 24 hours
     url: process.env.REDIS_URL,
     return_buffers: true,
   },
@@ -74,52 +75,44 @@ export async function closeCache(
 }
 
 /**
- * @description Get the cache key for a table, tile data and filters set
+ * @description Get the cache key for a table and tile data
  *
  * @param {string} table The cache table name
  * @param {number} z The tile zoom level
  * @param {number} x The tile x position
  * @param {number} y The tile y position
- * @param {string[]} filters The set of filters where conditions
  * @returns The cache key
  */
 export function getCacheKey(
   table: string,
   z: number,
   x: number,
-  y: number,
-  filters: string[]
+  y: number
 ): string {
-  return `${getCachePrefix(table, z, x, y)}${sha1(filters.join('-'))}`;
+  return `${table}-${z}-${x}-${y}`;
 }
 
 /**
- * @description Get the cache key prefix
+ * @description Get the cache filters key from the where statement of the filters
  *
- * @param {string} table The cache table name
- * @param {number} z The tile zoom level
- * @param {number} x The tile x position
- * @param {number} y The tile y position
- * @returns The cache key prefix
+ * @param {string[]} filters The where statement
+ * @returns The cache filters key
  */
-function getCachePrefix(
-  table: string,
-  z: number,
-  x: number,
-  y: number
-): string {
-  return `${table}-${z}-${x}-${y}-`;
+export function getCacheFiltersKey(filters: string[]): string {
+  return sha1(filters.sort((a, b) => (a > b ? 1 : a < b ? -1 : 0)).join('-'));
 }
 
 /**
  * @description Get the cache value of a cache key
  *
  * @param {string} key The cache key
+ * @param {string} filtersKey The cache filters key
  * @param {TileCacheOptions} options The cache options
  * @returns The cache value or null if not found or disabled
  */
 export async function getCacheValue(
   key: string,
+  filtersKey: string,
   options: TileCacheOptions = defaultCacheOptions
 ): Promise<any> {
   if (!options.enable) {
@@ -131,14 +124,14 @@ export async function getCacheValue(
   }
 
   if (options.type === 'redis') {
-    return await new Promise((resolve, reject) =>
-      redisCache.get(key, (error, value) => {
+    return await new Promise((resolve, reject) => {
+      redisCache.hget(key, filtersKey, (error, value) => {
         if (error) {
           return reject(error);
         }
         resolve(value);
-      })
-    );
+      });
+    });
   }
 
   // Invalid type
@@ -149,11 +142,13 @@ export async function getCacheValue(
  * @description Set the cache value for a cache key
  *
  * @param {string} key The cache key
+ * @param {string} filtersKey The cache filters key
  * @param {any} value The cache value
  * @param {TileCacheOptions} options The cache options
  */
 export async function setCacheValue(
   key: string,
+  filtersKey: string,
   value: any,
   options: TileCacheOptions = defaultCacheOptions
 ): Promise<void> {
@@ -168,15 +163,24 @@ export async function setCacheValue(
   }
 
   if (options.type === 'redis') {
-    await new Promise((resolve, reject) =>
-      redisCache.set(key, value, error => {
+    await new Promise((resolve, reject) => {
+      redisCache.hset(key, filtersKey, value, error => {
         if (error) {
           return reject(error);
         }
 
         resolve();
-      })
-    );
+      });
+    });
+
+    if (!!options.redisOptions.ttl) {
+      // If we have TTL, we apply it
+      await new Promise((resolve, reject) => {
+        redisCache.expire(key, options.redisOptions.ttl, error =>
+          !error ? resolve() : reject(error)
+        );
+      });
+    }
 
     return;
   }
@@ -208,7 +212,12 @@ export async function invalidateCache(
   }
 
   if (options.type === 'redis') {
-    const keyPattern = getCachePrefix(table, z, x, y) + '*',
+    if (redisCache === null) {
+      // If the cache was not init, we init it here
+      await initCache(options);
+    }
+
+    const keyPattern = getCacheKey(table, z, x, y) + '*',
       keys = await new Promise<string[]>((resolve, reject) =>
         redisCache.keys(keyPattern, (error, value: string[]) => {
           if (error) {
