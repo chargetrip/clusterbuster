@@ -18,18 +18,10 @@ TileServer({
 
     // For example a number can be safely used by passing it thorugh parseFloat
     const whereStatements = [];
-
-    // The below statement checks that filters.status is one of 'free' or 'busy' to prevent a potential SQL injection
-    if (
-      filters.status &&
-      (filters.status === 'free' || filters.status === 'busy')
-    ) {
+    if (filters.status && ['busy', 'free'].includes(filters.status)) {
       whereStatements.push(`status = '${filters.status}'`);
     }
-    if (
-      filters.speed &&
-      (filters.speed === 'fast' || filters.speed === 'slow')
-    ) {
+    if (filters.speed && ['slow', 'fast'].includes(filters.speed)) {
       whereStatements.push(`speed = '${filters.speed}'`);
     }
     return whereStatements;

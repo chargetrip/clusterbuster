@@ -17,15 +17,14 @@ TileServer({
   filtersToWhere: filters => {
     // You are responsible for protecting against SQL injection in this function. Because there are many ways to filter, it depends on the filter type on how to approach this.
 
-    // For example a number can be safely used by passing it thorugh parseFloat
+    // For example a number can be safely used by passing it through parseFloat, strings are best treated by checking for a set of allowed values
     const whereStatements = [];
 
-    // The below statement checks that filters.status is one of 'free' or 'busy' to prevent a potential SQL injection
-    if (filters.status && (filters.status === 'free' || filters.status === 'busy')) {
-
+    // The below statement checks that filters.status is one of 'free' or 'busy' to prevent potential SQL injection
+    if (filters.status && ['busy', 'free'].includes(filters.status)) {
       whereStatements.push(`status = '${filters.status}'`);
     }
-    if (filters.speed && (filters.speed === 'fast' || filters.speed === 'slow')) {
+    if (filters.speed && ['slow', 'fast'].includes(filters.speed)) {
       whereStatements.push(`speed = '${filters.speed}'`);
     }
     return whereStatements;
@@ -80,6 +79,16 @@ PGDATABASE=points
 PGPORT=5432
 ```
 
+## Filtering
+The `filtersToWhere` function can be used to implement custom filtering logic. It should return an array of SQL snippets, which clusterbuster transforms into the WHERE clause using AND between each statement.
+
+The resulting SQL query looks something like this:
+
+```SQL
+SELECT ...
+WHERE whereStatement1 AND whereStatement2
+```
+
 ## Internals
 
 The tile server creates clusters using the PostGIS ST_ClusterDBSCAN starting at the maximum zoomlevel and continues clustering iteratively for each zoom level until the zoom level of the tile request is reached. This 'cluster of clusters' clustering algorithm is inspired by the excellent [supercluster](https://github.com/mapbox/supercluster) library, which many people use to cluster on the front-end and even on the back-end (using something like supertiler).
@@ -119,4 +128,4 @@ All of these tile servers and tile generators offer some subset of the functiona
 
 ## Sponsors
 
-[![Chargetrip logo](https://chargetrip.com/img/logo-dark@2x.png)](https://www.chargetrip.com)
+[![Chargetrip logo](https://media.licdn.com/dms/image/C560BAQGsWTEJdxL0mA/company-logo_400_400/0?e=1580342400&v=beta&t=JjIWuawS6Q_XnuAtJCbPfy6QOv7mqENtDmIkRfvIUUQ) Chargetrip](https://www.chargetrip.com)
