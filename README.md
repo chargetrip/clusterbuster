@@ -14,11 +14,17 @@ TileServer({
   resolution: 512,
   attributes: ['status', 'speed'],
   filtersToWhere: filters => {
+    // You are responsible for protecting against SQL injection in this function. Because there are many ways to filter, it depends on the filter type on how to approach this.
+
+    // For example a number can be safely used by passing it thorugh parseFloat
     const whereStatements = [];
-    if (filters.status) {
+
+    // The below statement checks that filters.status is one of 'free' or 'busy' to prevent a potential SQL injection
+    if (filters.status && (filters.status === 'free' || filters.status === 'busy')) {
+
       whereStatements.push(`status = '${filters.status}'`);
     }
-    if (filters.speed) {
+    if (filters.speed && (filters.speed === 'fast' || filters.speed === 'slow')) {
       whereStatements.push(`speed = '${filters.speed}'`);
     }
     return whereStatements;
@@ -36,7 +42,7 @@ TileServer({
 });
 ```
 
-See the [express.js example](/example) for a fully functioning server that exposes the above tile server on a REST endpoint. 
+See the [express.js example](/example) for a fully functioning server that exposes the above tile server on a REST endpoint.
 
 See the [TileServerConfig](/types/TileServerConfig.ts) for the initial configuration options, to configure the cache, connection pool, filters, etc..
 
@@ -94,15 +100,14 @@ The main performance bottleneck for clusterbuster is the PostgreSQL server as th
 
 All of these tile servers and tile generators offer some subset of the functionality we required, but lacked atleast one, which is our motivation for making clusterbuster.
 
-|  Tiler        | dynamic data | filtering | clustering |
+| Tiler         | dynamic data | filtering | clustering |
 | ------------- | ------------ | --------- | ---------- |
-| clusterbuster |  ✓ | ✓ | ✓ |
-| Martin | ✓ | ✓ | x |
-| Tilestrata | ✓ | x | x |
-| Tegola | ✓ | x | x |
-| Tippecanoe | x | x | ✓ |
-| supertiler | x | x | ✓ |
-
+| clusterbuster | ✓            | ✓         | ✓          |
+| Martin        | ✓            | ✓         | x          |
+| Tilestrata    | ✓            | x         | x          |
+| Tegola        | ✓            | x         | x          |
+| Tippecanoe    | x            | x         | ✓          |
+| supertiler    | x            | x         | ✓          |
 
 ## When not to use clusterbuster
 

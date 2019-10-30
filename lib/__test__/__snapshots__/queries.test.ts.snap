@@ -4,21 +4,21 @@ exports[`createClusterQuery should create a clustered Query 1`] = `
 "
 with filtered AS
        
-    (SELECT public.stations.wkb_geometry, 1 as theCount , a
+    (SELECT $1.$2, 1 as theCount $3
     FROM public.stations
-    WHERE ST_Intersects(TileBBox(1, 0, 1, 3857), ST_Transform(public.stations.wkb_geometry, 3857))
-        AND status = status AND [1, 2] @> [2, 3]
+    WHERE ST_Intersects(TileBBox($4, $5, $6, 3857), ST_Transform($7.$8, 3857))
+        $9
     ),
-    clustered_10 AS
-    (SELECT wkb_geometry as center,
+    clustered_$10 AS
+    (SELECT $11 as center,
         theCount,
-        ST_ClusterDBSCAN(wkb_geometry, 0.009765625, 1) over () as clusters , a
+        ST_ClusterDBSCAN($12, $13, 1) over () as clusters $14
     FROM filtered),
-    grouped_clusters_10 AS
+    grouped_clusters_$15 AS
     (SELECT SUM(theCount) as theCount,
-        FIRST(a) as a,
+        $16
         ST_Centroid(ST_Collect(center)) as center
-    FROM clustered_10
+    FROM clustered_$17
     GROUP BY clusters),
 
     
@@ -132,33 +132,89 @@ with filtered AS
 
      tiled as
     (SELECT center,
-            theCount , a
-     FROM grouped_clusters_1
-     WHERE ST_Intersects(TileBBox(1, 0, 1, 3857), ST_Transform(center, 3857))),
+            theCount $18
+     FROM grouped_clusters_$19
+     WHERE ST_Intersects(TileBBox($20, $21, $22, 3857), ST_Transform(center, 3857))),
      q as
     (SELECT 1 as c1,
-            ST_AsMVTGeom(ST_Transform(center, 3857), TileBBox(1, 0, 1, 3857), 512, 10, false) AS geom,
-            jsonb_build_object('count', theCount, 'a', a) as attributes
+            ST_AsMVTGeom(ST_Transform(center, 3857), TileBBox($23, $24, $25, 3857), $26, 10, false) AS geom,
+            jsonb_build_object('count', theCount$27) as attributes
      FROM tiled)
-SELECT ST_AsMVT(q, 'points', 512, 'geom') as mvt
+SELECT ST_AsMVT(q, '$28', $29, 'geom') as mvt
 from q
 "
 `;
 
+exports[`createClusterQuery should create a clustered Query 2`] = `
+Array [
+  "public.stations",
+  "wkb_geometry",
+  ", a",
+  1,
+  0,
+  1,
+  "public.stations",
+  "wkb_geometry",
+  "AND status = status AND [1, 2] @> [2, 3]",
+  10,
+  "wkb_geometry",
+  "wkb_geometry",
+  0.009765625,
+  ", a",
+  10,
+  "FIRST(a) as a,",
+  10,
+  ", a",
+  1,
+  1,
+  0,
+  1,
+  1,
+  0,
+  1,
+  512,
+  ", 'a', a",
+  "points",
+  512,
+]
+`;
+
 exports[`createClusterQuery should create a unclustered Query 1`] = `
-"
+Object {
+  "sql": "
 WITH filtered AS
-    (SELECT public.stations.wkb_geometry , a
+    (SELECT $1.$2 $3
     FROM public.stations
-    WHERE ST_Intersects(TileBBox(15, 0, 1, 3857), ST_Transform(public.stations.wkb_geometry, 3857))
-      
+    WHERE ST_Intersects(TileBBox($4, $5, $6, 3857), ST_Transform($7.$8, 3857))
+      $9
     ),
     q as
     (SELECT 1 as c1,
-            ST_AsMVTGeom(ST_Transform(wkb_geometry, 3857), TileBBox(15, 0, 1, 3857), 512, 10, false) AS geom,
-            jsonb_build_object('count', 1, 'a', a) as attributes
+            ST_AsMVTGeom(ST_Transform($10, 3857), TileBBox($11, $12, $13, 3857), $14, 10, false) AS geom,
+            jsonb_build_object('count', 1$15) as attributes
      FROM filtered)
-SELECT ST_AsMVT(q, 'points', 512, 'geom') as mvt
+SELECT ST_AsMVT(q, '$16', $17, 'geom') as mvt
 from q
-"
+",
+  "type": "SLONIK_TOKEN_SQL",
+  "values": Array [
+    "public.stations",
+    "wkb_geometry",
+    ", a",
+    15,
+    0,
+    1,
+    "public.stations",
+    "wkb_geometry",
+    "",
+    "wkb_geometry",
+    15,
+    0,
+    1,
+    512,
+    ", 'a', a",
+    "points",
+    512,
+  ],
+}
 `;
