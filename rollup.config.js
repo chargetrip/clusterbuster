@@ -17,7 +17,7 @@ export default [
       file: 'dist/index.js',
       format: 'cjs',
     },
-    external: ['redis'],
+    external: ['redis', 'slonik'],
     plugins: [
       resolve({
         extensions: ['.js', '.ts'],

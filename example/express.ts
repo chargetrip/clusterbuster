@@ -13,12 +13,23 @@ TileServer({
   maxZoomLevel,
   resolution: 512,
   attributes: ['status', 'speed'],
-  filtersToWhere: filters => {
+  filtersToWhere: (filters = { status: undefined, speed: undefined }) => {
+    // You are responsible for protecting against SQL injection in this function. Because there are many ways to filter, it depends on the filter type on how to approach this.
+
+    // For example a number can be safely used by passing it thorugh parseFloat
     const whereStatements = [];
-    if (!!filters && !!filters.status) {
+
+    // The below statement checks that filters.status is one of 'free' or 'busy' to prevent a potential SQL injection
+    if (
+      filters.status &&
+      (filters.status === 'free' || filters.status === 'busy')
+    ) {
       whereStatements.push(`status = '${filters.status}'`);
     }
-    if (!!filters && !!filters.speed) {
+    if (
+      filters.speed &&
+      (filters.speed === 'fast' || filters.speed === 'slow')
+    ) {
       whereStatements.push(`speed = '${filters.speed}'`);
     }
     return whereStatements;

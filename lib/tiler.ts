@@ -52,19 +52,20 @@ export async function TileServer<T>({
       }
 
       try {
+        const query = createQueryForTile({
+          z,
+          x,
+          y,
+          maxZoomLevel,
+          table,
+          geometry,
+          sourceLayer,
+          resolution,
+          attributes,
+          query: filtersQuery,
+        });
         const result = await pool.query(
-          createQueryForTile({
-            z,
-            x,
-            y,
-            maxZoomLevel,
-            table,
-            geometry,
-            sourceLayer,
-            resolution,
-            attributes,
-            query: filtersQuery,
-          })
+          query.sql, query.values
         );
         console.timeEnd('query' + id);
 
