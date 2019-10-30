@@ -45,23 +45,6 @@ export function Cache(options: TileCacheOptions = defaultCacheOptions) {
 
   return {
     /**
-     * @description Close the cache system
-     */
-    closeCache: async (): Promise<void> => {
-      if (!options.enable) {
-        return;
-      }
-
-      if (options.type === 'lru-cache') {
-        // Nothing to do here
-      } else if (options.type === 'redis') {
-        await new Promise((resolve, reject) =>
-          redisCache.quit(error => (!error ? resolve() : reject(error)))
-        );
-      }
-    },
-
-    /**
      * @description Get the cache key for a table, tile data and where statement of the filters
      *
      * @param {string} table The cache table name
@@ -164,6 +147,5 @@ export function Cache(options: TileCacheOptions = defaultCacheOptions) {
         return;
       }
     },
-    a: 'b',
   };
 }
