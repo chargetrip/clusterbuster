@@ -2,7 +2,7 @@
 
 ### Server
 
-You need to have PostgresQL install on you environment. After that, create `.env` file and fill it with the following values:
+You need to have PostgresQL installed on you environment. After that, create `.env` file and fill it with the following values:
 
 ```
 PGUSER=postgres
