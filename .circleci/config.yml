@@ -47,6 +47,10 @@ jobs:
     docker:
       - image: circleci/node:lts
     steps:
+      - build_prep
+      - run:
+          name: Build
+          command: yarn build
       - run:
           name: Build
           command: yarn semantic-release || true
