@@ -49,5 +49,5 @@ jobs:
     steps:
       - run:
           name: Build
-          command: semantic-release || true
+          command: yarn semantic-release || true
     
