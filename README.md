@@ -1,6 +1,6 @@
 ## Intro
 
-Clusterbuster is a tile server that produces map tiles (in MVT format) from a table with a PostGIS geometry column. It uses this table to first filter the row (based on a query you provide) and the resulting points are then clustered dynamically. The combination of clusters and points is transformed into a vector tile. The MVT tiles are much smaller than the original data, moving all the heavy lifting from the front-end to the tile server. This allows the display of large data sets, that change regularly, on maps in resource constrained environments, such as mobile devices. Clusterbuster has a built-in and configurable in-memory LRU-cache for the resulting tiles, with which it can serve many concurrent users.
+Clusterbuster is a tile server that produces map tiles (in MVT format) from a table with a PostGIS geometry column. It uses this table to first filter the row (based on a query you provide) and the resulting points are then clustered dynamically. The combination of clusters and points is transformed into a vector tile. The MVT tiles are much smaller than the original data, moving all the heavy lifting from the front-end to the tile server. This allows the display of large data sets, that change regularly, on maps in resource constrained environments, such as mobile devices and embedded systems. Clusterbuster has a built-in and configurable in-memory LRU-cache for the resulting tiles, with which it can serve many concurrent users.
 
 ## Getting started
 
