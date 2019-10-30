@@ -8,6 +8,7 @@ Clusterbuster is designed to be used in a NodeJS server connected to a PostgreSQ
 
 ```Javascript
 const { TileServer } = require('clusterbuster');
+
 TileServer({
     // types/TileServerConfig.ts
   maxZoomLevel,

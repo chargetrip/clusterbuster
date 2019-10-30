@@ -13,6 +13,9 @@
     "babel": "babel js --out-dir dist --extensions \".ts\" --exclude \"**/__test__/*\"",
     "test": "jest"
   },
+  "dependencies": {
+    "slonik": "^19.2.0"
+  },
   "peerDependencies": {
     "redis": "^2.8.0"
   },
@@ -41,7 +44,6 @@
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-run": "^1.1.0",
     "sha1": "^1.1.1",
-    "slonik": "^19.2.0",
     "ts-node": "^8.4.1",
     "typescript": "^3.6.4",
     "uuid": "^3.3.3"
