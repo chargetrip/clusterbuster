@@ -1,5 +1,5 @@
 import { PoolConfig } from 'pg';
-import { TileCacheOptions } from './TileCache';
+import { TileCacheOptions } from './TileCacheOptions';
 
 /**
  * @description Configuration options for the tile server
