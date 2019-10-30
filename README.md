@@ -128,4 +128,4 @@ All of these tile servers and tile generators offer some subset of the functiona
 
 ## Sponsors
 
-[![Chargetrip logo](https://media.licdn.com/dms/image/C560BAQGsWTEJdxL0mA/company-logo_400_400/0?e=1580342400&v=beta&t=JjIWuawS6Q_XnuAtJCbPfy6QOv7mqENtDmIkRfvIUUQ) Chargetrip](https://www.chargetrip.com)
+[![Chargetrip logo](https://chargetrip-files.s3.eu-central-1.amazonaws.com/logo-1.png)](https://www.chargetrip.com)
