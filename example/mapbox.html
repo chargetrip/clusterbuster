@@ -29,7 +29,7 @@
     <div id="map"></div>
     <script>
       mapboxgl.accessToken =
-        '<your-api-key-here>';
+        'pk.eyJ1IjoicG9yc2NoZWNoYXJnaW5nbWFwIiwiYSI6ImNqeXJiamJveDA4bmozbHF5OHRpOWsyYzYifQ.yH-K9CGaHe7HLgM7XcbbVQ';
       var map = new mapboxgl.Map({
         container: 'map',
         style: 'mapbox://styles/mapbox/light-v10',
@@ -73,6 +73,7 @@
           id: 'unclustered-point',
           type: 'circle',
           source: 'points',
+          'source-layer': `points`,
           filter: ['!', ['has', 'point_count']],
           paint: {
             'circle-color': '#11b4da',
