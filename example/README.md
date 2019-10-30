@@ -2,7 +2,7 @@
 
 ### Server
 
-You need to have PostgresQL installed on you environment. After that, create `.env` file and fill it with the following values:
+You need to have PostgresQL (with PostGIS extensions) installed on you environment with a database called `points`. After that, create `.env` file and fill it with the following values:
 
 ```
 PGUSER=postgres

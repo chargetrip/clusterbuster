@@ -42,11 +42,9 @@ TileServer({
 });
 ```
 
-See the [express.js example](/example) for a fully functioning server that exposes the above tile server on a REST endpoint.
+See the [express.js example](/example) for a fully functioning server that exposes the above tile server on a REST endpoint. You can see the [TileServerConfig](/types/TileServerConfig.ts) for the initial configuration options, to configure the cache, connection pool, filters, etc..
 
-See the [TileServerConfig](/types/TileServerConfig.ts) for the initial configuration options, to configure the cache, connection pool, filters, etc..
-
-See the [TileRequest](/types/TileRequest.ts) for the per tile request options.
+The [TileRequest](/types/TileRequest.ts) defines the per tile request options.
 
 The above example assumes a postgres database with a `public.my_points_table` table matching:
 

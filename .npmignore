@@ -1,6 +1,7 @@
 .env
 node_modules
-js
+lib
+types
 example
 babel.config.js
 rollup.config.js
