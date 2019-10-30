@@ -17,15 +17,14 @@ TileServer({
   filtersToWhere: filters => {
     // You are responsible for protecting against SQL injection in this function. Because there are many ways to filter, it depends on the filter type on how to approach this.
 
-    // For example a number can be safely used by passing it thorugh parseFloat
+    // For example a number can be safely used by passing it through parseFloat, strings are best treated by checking for a set of allowed values
     const whereStatements = [];
 
-    // The below statement checks that filters.status is one of 'free' or 'busy' to prevent a potential SQL injection
-    if (filters.status && (filters.status === 'free' || filters.status === 'busy')) {
-
+    // The below statement checks that filters.status is one of 'free' or 'busy' to prevent potential SQL injection
+    if (filters.status && ['busy', 'free'].includes(filters.status)) {
       whereStatements.push(`status = '${filters.status}'`);
     }
-    if (filters.speed && (filters.speed === 'fast' || filters.speed === 'slow')) {
+    if (filters.speed && ['slow', 'fast'].includes(filters.speed)) {
       whereStatements.push(`speed = '${filters.speed}'`);
     }
     return whereStatements;
@@ -78,6 +77,16 @@ PGHOST=localhost
 PGPASSWORD=
 PGDATABASE=points
 PGPORT=5432
+```
+
+## Filtering
+The `filtersToWhere` function can be used to implement custom filtering logic. It should return an array of SQL snippets, which clusterbuster transforms into the WHERE clause using AND between each statement.
+
+The resulting SQL query looks something like this:
+
+```SQL
+SELECT ...
+WHERE whereStatement1 AND whereStatement2
 ```
 
 ## Internals
