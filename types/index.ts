@@ -1,4 +1,4 @@
-export * from './TileCache';
+export * from './TileCacheOptions';
 export * from './TileInput';
 export * from './TileRenderer';
 export * from './TileRequest';

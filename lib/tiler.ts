@@ -1,12 +1,6 @@
 import pg from 'pg';
 import { TileInput, TileRenderer, TileServerConfig } from '../types';
-import {
-  defaultCacheOptions,
-  getCacheKey,
-  getCacheValue,
-  initCache,
-  setCacheValue,
-} from './cache';
+import { Cache, defaultCacheOptions } from './cache';
 import { createQueryForTile } from './queries';
 import createSupportingSQLFunctions from './supporting';
 import { zip } from './zip';
@@ -28,7 +22,8 @@ export async function TileServer<T>({
     process.exit(-1);
   });
 
-  await initCache(cacheOptions);
+  const cache = Cache(cacheOptions);
+
   await createSupportingSQLFunctions(pool);
 
   return async ({
@@ -45,8 +40,8 @@ export async function TileServer<T>({
       const filtersQuery = !!filtersToWhere ? filtersToWhere(queryParams) : [];
 
       console.time('query' + id);
-      const cacheKey = getCacheKey(table, z, x, y, filtersQuery);
-      const value = await getCacheValue(cacheKey, cacheOptions);
+      const cacheKey = cache.getCacheKey(table, z, x, y, filtersQuery);
+      const value = await cache.getCacheValue(cacheKey);
       if (value) {
         return value;
       }
@@ -73,7 +68,7 @@ export async function TileServer<T>({
         const tile = await zip(result.rows[0].mvt);
         console.timeEnd('gzip' + id);
 
-        await setCacheValue(cacheKey, tile, cacheOptions);
+        await cache.setCacheValue(cacheKey, tile);
 
         return tile;
       } catch (e) {
