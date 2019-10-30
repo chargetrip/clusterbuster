@@ -5,6 +5,13 @@ workflows:
   build:
     jobs:
       - build_and_test
+      - release:
+          requires:
+            - build_and_test
+          filters:
+            branches:
+              only:
+                - master
 
 commands:
   build_prep:
@@ -36,3 +43,11 @@ jobs:
       - run:
           name: Build
           command: yarn build
+  release:
+    docker:
+      - image: circleci/node:lts
+    steps:
+      - run:
+          name: Build
+          command: semantic-release || true
+    
