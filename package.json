@@ -1,6 +1,6 @@
 {
   "name": "clusterbuster",
-  "version": "0.0.2",
+  "version": "0.0.0-development",
   "description": "MVT map tiling server with built-in clustering and filtering",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -11,7 +11,8 @@
     "build": "rollup --config rollup.config.js",
     "start": "yarn build && ts-node example/express.ts",
     "babel": "babel js --out-dir dist --extensions \".ts\" --exclude \"**/__test__/*\"",
-    "test": "jest"
+    "test": "jest",
+    "semantic-release": "semantic-release"
   },
   "dependencies": {
     "slonik": "^19.2.0"
@@ -46,6 +47,7 @@
     "sha1": "^1.1.1",
     "ts-node": "^8.4.1",
     "typescript": "^3.6.4",
-    "uuid": "^3.3.3"
+    "uuid": "^3.3.3",
+    "semantic-release": "^15.13.28"
   }
 }
