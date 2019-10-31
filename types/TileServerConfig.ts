@@ -38,4 +38,9 @@ export interface TileServerConfig<T> {
    * @description Attributes to select from the table
    */
   attributes: string[];
+
+  /**
+   * @description Show debug logging, default false
+   */
+  debug?: boolean;
 }

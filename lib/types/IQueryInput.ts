@@ -8,4 +8,5 @@ export interface IQueryInput extends TileRequest {
   resolution: number;
   attributes: string[];
   query: string[];
+  debug: boolean;
 }
