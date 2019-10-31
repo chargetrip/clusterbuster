@@ -175,6 +175,7 @@ export function createQueryForTile({
   resolution,
   attributes,
   query,
+  debug,
 }: IQueryInput) {
   if (z < maxZoomLevel) {
     // Clustered multi-zoom level case
@@ -204,7 +205,8 @@ export function createQueryForTile({
       resolution,
       attributes,
     });
-    // console.log(ret.sql);
+    debug && console.log(ret.sql);
+    debug && console.log(ret.values);
     return ret;
   } else {
     // Unclustered case
@@ -219,7 +221,8 @@ export function createQueryForTile({
       attributes,
       query,
     });
-    // console.log(ret.sql);
+    debug && console.log(ret.sql);
+    debug && console.log(ret.values);
     return ret;
   }
 }
