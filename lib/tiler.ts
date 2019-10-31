@@ -42,9 +42,14 @@ export async function TileServer<T>({
 
       debug && console.time('query' + id);
       const cacheKey = cache.getCacheKey(table, z, x, y, filtersQuery);
-      const value = await cache.getCacheValue(cacheKey);
-      if (value) {
-        return value;
+      try {
+        const value = await cache.getCacheValue(cacheKey);
+        if (value) {
+          return value;
+        }
+      } catch (e) {
+        // In case the cache get fail, we continue to generate the tile
+        debug && console.log({ e });
       }
       let query;
 
@@ -69,7 +74,12 @@ export async function TileServer<T>({
         const tile = await zip(result.rows[0].mvt);
         debug && console.timeEnd('gzip' + id);
 
-        await cache.setCacheValue(cacheKey, tile);
+        try {
+          await cache.setCacheValue(cacheKey, tile);
+        } catch (e) {
+          // In case the cache set fail, we should return the generated tile
+          debug && console.log({ e });
+        }
 
         return tile;
       } catch (e) {
