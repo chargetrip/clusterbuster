@@ -16,8 +16,8 @@ export const defaultCacheOptions: TileCacheOptions = {
   },
   redisOptions: {
     ttl: 86400, // 24 hours
-    url: process.env.REDIS_URL,
-    return_buffers: true,
+    host: process.env.REDIS_HOST,
+    dropBufferSupport: false,
   },
 };
 
@@ -36,10 +36,12 @@ export function Cache(options: TileCacheOptions = defaultCacheOptions) {
       ...options.lruOptions,
     });
   } else if (options.type === 'redis') {
-    redisCache = require('redis').createClient({
+    const Redis = require('ioredis');
+
+    redisCache = new Redis({
       ...defaultCacheOptions.redisOptions,
       ...options.redisOptions,
-      ...{ return_buffers: true },
+      ...{ dropBufferSupport: false },
     });
   }
 
@@ -85,15 +87,7 @@ export function Cache(options: TileCacheOptions = defaultCacheOptions) {
       }
 
       if (options.type === 'redis') {
-        return await new Promise((resolve, reject) => {
-          redisCache.get(key, (error, value) => {
-            if (error) {
-              return reject(error);
-            }
-
-            resolve(value);
-          });
-        });
+        return await redisCache.getBuffer(key);
       }
 
       // Invalid type
@@ -118,31 +112,11 @@ export function Cache(options: TileCacheOptions = defaultCacheOptions) {
       }
 
       if (options.type === 'redis') {
-        await new Promise((resolve, reject) => {
-          if (!!options.redisOptions.ttl) {
-            return redisCache.set(
-              key,
-              value,
-              'EX',
-              options.redisOptions.ttl,
-              error => {
-                if (error) {
-                  return reject(error);
-                }
-
-                resolve();
-              }
-            );
-          }
-
-          redisCache.set(key, value, error => {
-            if (error) {
-              return reject(error);
-            }
-
-            resolve();
-          });
-        });
+        if (!!options.redisOptions.ttl) {
+          await redisCache.set(key, value, 'EX', options.redisOptions.ttl);
+        } else {
+          await await redisCache.set(key, value);
+        }
 
         return;
       }

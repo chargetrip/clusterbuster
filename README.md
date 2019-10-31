@@ -92,7 +92,7 @@ WHERE whereStatement1 AND whereStatement2
 
 The default cache is a in-memory LRU cache local to the tile server. This cache is ideal for a single instance tile server. If you are going to use clusterbuster in a loadbalanced multi instance server environment, the cache can be a redis instance or cluster instead, allowing all tile server instances to share the same tile cache.
 
-You need to install the peer dependency `npm i redis` and configure the tile server to use redis instead of LRU. See the [TileCacheOptions](/TileCacheOptions.ts) for all the configuration options.
+You need to install the peer dependency `npm i ioredis` and configure the tile server to use redis instead of LRU. See the [TileCacheOptions](/TileCacheOptions.ts) for all the configuration options.
 
 ```json
 { "cacheOptions": { "type": "redis" } }
