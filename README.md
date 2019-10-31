@@ -78,6 +78,7 @@ PGPORT=5432
 ```
 
 ## Filtering
+
 The `filtersToWhere` function can be used to implement custom filtering logic. It should return an array of SQL snippets, which clusterbuster transforms into the WHERE clause using AND between each statement.
 
 The resulting SQL query looks something like this:
@@ -85,6 +86,16 @@ The resulting SQL query looks something like this:
 ```SQL
 SELECT ...
 WHERE whereStatement1 AND whereStatement2
+```
+
+## Caching
+
+The default cache is a in-memory LRU cache local to the tile server. This cache is ideal for a single instance tile server. If you are going to use clusterbuster in a loadbalanced multi instance server environment, the cache can be a redis instance or cluster instead, allowing all tile server instances to share the same tile cache.
+
+You need to install the peer dependency `npm i redis` and configure the tile server to use redis instead of LRU. See the [TileCacheOptions](/TileCacheOptions.ts) for all the configuration options.
+
+```json
+{ "cacheOptions": { "type": "redis" } }
 ```
 
 ## Internals

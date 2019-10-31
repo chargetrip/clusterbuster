@@ -3,7 +3,7 @@ import { ClientOpts } from 'redis';
 
 export interface TileCacheOptions {
   /**
-   * @description Flag which indicate if the cache should be enble. Default is true.
+   * @description Flag which indicate if the cache should be enabled. Default is true.
    */
   enable?: boolean;
 
