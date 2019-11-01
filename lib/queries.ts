@@ -10,10 +10,22 @@ const unclusteredQuery = ({
   z,
   table,
   geometry,
+  maxZoomLevel,
   sourceLayer,
   resolution,
   attributes,
   query,
+}: {
+  x: number;
+  y: number;
+  z: number;
+  table: string;
+  geometry: string;
+  sourceLayer: string;
+  maxZoomLevel: number;
+  resolution: number;
+  attributes: string[];
+  query: string[];
 }) =>
   sql`
 WITH filtered AS
@@ -31,9 +43,9 @@ WITH filtered AS
             ST_AsMVTGeom(ST_Transform(${sql.raw(
               geometry
             )}, 3857), TileBBox(${z}, ${x}, ${y}, 3857), ${resolution}, 10, false) AS geom,
-            jsonb_build_object('count', 1${sql.raw(
-              attributesToArray(attributes)
-            )}) as attributes
+            jsonb_build_object('count', 1, 'expansionZoom', ${sql.raw(
+              `${maxZoomLevel}`
+            )}${sql.raw(attributesToArray(attributes))}) AS attributes
      FROM filtered)
 SELECT ST_AsMVT(q, ${sourceLayer}, ${resolution}, 'geom') as mvt
 from q
@@ -50,17 +62,26 @@ const baseClusteredQuery = ({
   sourceLayer,
   resolution,
   attributes = [],
+}: {
+  filterBlock: string;
+  z: number;
+  x: number;
+  y: number;
+  sourceLayer: string;
+  resolution: number;
+  attributes: string[];
 }) => sql`
     ${filterBlock}
      tiled as
     (SELECT center,
+            expansionZoom,
             theCount ${sql.raw(attributesToSelect(attributes))}
      ${sql.raw(`FROM grouped_clusters_${z}`)}
      WHERE ST_Intersects(TileBBox(${z}, ${x}, ${y}, 3857), ST_Transform(center, 3857))),
      q as
     (SELECT 1 as c1,
             ST_AsMVTGeom(ST_Transform(center, 3857), TileBBox(${z}, ${x}, ${y}, 3857), ${resolution}, 10, false) AS geom,
-            jsonb_build_object('count', theCount${sql.raw(
+            jsonb_build_object('count', theCount, 'expansionZoom', expansionZoom${sql.raw(
               attributesToArray(attributes)
             )}) as attributes
      FROM tiled)
@@ -81,6 +102,16 @@ const filterBlock = ({
   query,
   attributes,
   additionalLevels,
+}: {
+  x: number;
+  y: number;
+  z: number;
+  maxZoomLevel: number;
+  table: string;
+  geometry: string;
+  query: string[];
+  attributes: string[];
+  additionalLevels: string;
 }) =>
   sql`
   with filtered as
@@ -105,6 +136,8 @@ const filterBlock = ({
     FROM filtered),
     ${sql.raw(`grouped_clusters_${maxZoomLevel}`)} AS
     (SELECT SUM(theCount) AS theCount,
+            clusters AS clusterNo,
+            ${sql.raw(`${maxZoomLevel + 1}`)} AS expansionZoom,
       ${sql.raw(attributesFirstToSelect(attributes))}
       ST_Centroid(ST_Collect(center)) AS center
     ${sql.raw(`FROM clustered_${maxZoomLevel}`)}
@@ -115,9 +148,17 @@ const filterBlock = ({
 /**
  * Creates an SQL fragment for the particular zoomLevel depending on zoomLevel - 1 for its data
  */
-const additionalLevel = ({ zoomLevel, attributes }) => `
+const additionalLevel = ({
+  zoomLevel,
+  attributes,
+}: {
+  zoomLevel: number;
+  attributes: string[];
+}) => `
     clustered_${zoomLevel} AS
         (SELECT center,
+            expansionZoom,
+            clusterNo AS previousClusterNo,
             theCount,
             ST_ClusterDBSCAN(center, ${zoomToDistance(
               zoomLevel
@@ -125,6 +166,9 @@ const additionalLevel = ({ zoomLevel, attributes }) => `
         FROM grouped_clusters_${zoomLevel + 1}),
     grouped_clusters_${zoomLevel} AS
         (SELECT SUM(theCount) as theCount,
+                clusters AS clusterNo,
+                (CASE COUNT(previousClusterNo) WHEN 1 THEN FIRST(expansionZoom) ELSE ${zoomLevel +
+                  1} END) AS expansionZoom,
             ${attributesFirstToSelect(attributes)}
             ST_Centroid(ST_Collect(center)) as center
         FROM clustered_${zoomLevel}
@@ -217,6 +261,7 @@ export function createQueryForTile({
       table,
       geometry,
       sourceLayer,
+      maxZoomLevel,
       resolution,
       attributes,
       query,

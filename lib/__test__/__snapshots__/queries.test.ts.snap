@@ -17,6 +17,8 @@ exports[`createClusterQuery should create a clustered Query 1`] = `
     FROM filtered),
     grouped_clusters_10 AS
     (SELECT SUM(theCount) AS theCount,
+            clusters AS clusterNo,
+            11 AS expansionZoom,
       FIRST(a) as a,
       ST_Centroid(ST_Collect(center)) AS center
     FROM clustered_10
@@ -24,11 +26,15 @@ exports[`createClusterQuery should create a clustered Query 1`] = `
     
     clustered_9 AS
         (SELECT center,
+            expansionZoom,
+            clusterNo AS previousClusterNo,
             theCount,
             ST_ClusterDBSCAN(center, 0.01953125, 1) over () as clusters , a
         FROM grouped_clusters_10),
     grouped_clusters_9 AS
         (SELECT SUM(theCount) as theCount,
+                clusters AS clusterNo,
+                (CASE COUNT(previousClusterNo) WHEN 1 THEN FIRST(expansionZoom) ELSE 10 END) AS expansionZoom,
             FIRST(a) as a,
             ST_Centroid(ST_Collect(center)) as center
         FROM clustered_9
@@ -36,11 +42,15 @@ exports[`createClusterQuery should create a clustered Query 1`] = `
 
     clustered_8 AS
         (SELECT center,
+            expansionZoom,
+            clusterNo AS previousClusterNo,
             theCount,
             ST_ClusterDBSCAN(center, 0.0390625, 1) over () as clusters , a
         FROM grouped_clusters_9),
     grouped_clusters_8 AS
         (SELECT SUM(theCount) as theCount,
+                clusters AS clusterNo,
+                (CASE COUNT(previousClusterNo) WHEN 1 THEN FIRST(expansionZoom) ELSE 9 END) AS expansionZoom,
             FIRST(a) as a,
             ST_Centroid(ST_Collect(center)) as center
         FROM clustered_8
@@ -48,11 +58,15 @@ exports[`createClusterQuery should create a clustered Query 1`] = `
 
     clustered_7 AS
         (SELECT center,
+            expansionZoom,
+            clusterNo AS previousClusterNo,
             theCount,
             ST_ClusterDBSCAN(center, 0.078125, 1) over () as clusters , a
         FROM grouped_clusters_8),
     grouped_clusters_7 AS
         (SELECT SUM(theCount) as theCount,
+                clusters AS clusterNo,
+                (CASE COUNT(previousClusterNo) WHEN 1 THEN FIRST(expansionZoom) ELSE 8 END) AS expansionZoom,
             FIRST(a) as a,
             ST_Centroid(ST_Collect(center)) as center
         FROM clustered_7
@@ -60,11 +74,15 @@ exports[`createClusterQuery should create a clustered Query 1`] = `
 
     clustered_6 AS
         (SELECT center,
+            expansionZoom,
+            clusterNo AS previousClusterNo,
             theCount,
             ST_ClusterDBSCAN(center, 0.15625, 1) over () as clusters , a
         FROM grouped_clusters_7),
     grouped_clusters_6 AS
         (SELECT SUM(theCount) as theCount,
+                clusters AS clusterNo,
+                (CASE COUNT(previousClusterNo) WHEN 1 THEN FIRST(expansionZoom) ELSE 7 END) AS expansionZoom,
             FIRST(a) as a,
             ST_Centroid(ST_Collect(center)) as center
         FROM clustered_6
@@ -72,11 +90,15 @@ exports[`createClusterQuery should create a clustered Query 1`] = `
 
     clustered_5 AS
         (SELECT center,
+            expansionZoom,
+            clusterNo AS previousClusterNo,
             theCount,
             ST_ClusterDBSCAN(center, 0.3125, 1) over () as clusters , a
         FROM grouped_clusters_6),
     grouped_clusters_5 AS
         (SELECT SUM(theCount) as theCount,
+                clusters AS clusterNo,
+                (CASE COUNT(previousClusterNo) WHEN 1 THEN FIRST(expansionZoom) ELSE 6 END) AS expansionZoom,
             FIRST(a) as a,
             ST_Centroid(ST_Collect(center)) as center
         FROM clustered_5
@@ -84,11 +106,15 @@ exports[`createClusterQuery should create a clustered Query 1`] = `
 
     clustered_4 AS
         (SELECT center,
+            expansionZoom,
+            clusterNo AS previousClusterNo,
             theCount,
             ST_ClusterDBSCAN(center, 0.625, 1) over () as clusters , a
         FROM grouped_clusters_5),
     grouped_clusters_4 AS
         (SELECT SUM(theCount) as theCount,
+                clusters AS clusterNo,
+                (CASE COUNT(previousClusterNo) WHEN 1 THEN FIRST(expansionZoom) ELSE 5 END) AS expansionZoom,
             FIRST(a) as a,
             ST_Centroid(ST_Collect(center)) as center
         FROM clustered_4
@@ -96,11 +122,15 @@ exports[`createClusterQuery should create a clustered Query 1`] = `
 
     clustered_3 AS
         (SELECT center,
+            expansionZoom,
+            clusterNo AS previousClusterNo,
             theCount,
             ST_ClusterDBSCAN(center, 1.25, 1) over () as clusters , a
         FROM grouped_clusters_4),
     grouped_clusters_3 AS
         (SELECT SUM(theCount) as theCount,
+                clusters AS clusterNo,
+                (CASE COUNT(previousClusterNo) WHEN 1 THEN FIRST(expansionZoom) ELSE 4 END) AS expansionZoom,
             FIRST(a) as a,
             ST_Centroid(ST_Collect(center)) as center
         FROM clustered_3
@@ -108,11 +138,15 @@ exports[`createClusterQuery should create a clustered Query 1`] = `
 
     clustered_2 AS
         (SELECT center,
+            expansionZoom,
+            clusterNo AS previousClusterNo,
             theCount,
             ST_ClusterDBSCAN(center, 2.5, 1) over () as clusters , a
         FROM grouped_clusters_3),
     grouped_clusters_2 AS
         (SELECT SUM(theCount) as theCount,
+                clusters AS clusterNo,
+                (CASE COUNT(previousClusterNo) WHEN 1 THEN FIRST(expansionZoom) ELSE 3 END) AS expansionZoom,
             FIRST(a) as a,
             ST_Centroid(ST_Collect(center)) as center
         FROM clustered_2
@@ -120,11 +154,15 @@ exports[`createClusterQuery should create a clustered Query 1`] = `
 
     clustered_1 AS
         (SELECT center,
+            expansionZoom,
+            clusterNo AS previousClusterNo,
             theCount,
             ST_ClusterDBSCAN(center, 5, 1) over () as clusters , a
         FROM grouped_clusters_2),
     grouped_clusters_1 AS
         (SELECT SUM(theCount) as theCount,
+                clusters AS clusterNo,
+                (CASE COUNT(previousClusterNo) WHEN 1 THEN FIRST(expansionZoom) ELSE 2 END) AS expansionZoom,
             FIRST(a) as a,
             ST_Centroid(ST_Collect(center)) as center
         FROM clustered_1
@@ -133,13 +171,14 @@ exports[`createClusterQuery should create a clustered Query 1`] = `
 
      tiled as
     (SELECT center,
+            expansionZoom,
             theCount , a
      FROM grouped_clusters_1
      WHERE ST_Intersects(TileBBox($4, $5, $6, 3857), ST_Transform(center, 3857))),
      q as
     (SELECT 1 as c1,
             ST_AsMVTGeom(ST_Transform(center, 3857), TileBBox($7, $8, $9, 3857), $10, 10, false) AS geom,
-            jsonb_build_object('count', theCount, 'a', a) as attributes
+            jsonb_build_object('count', theCount, 'expansionZoom', expansionZoom, 'a', a) as attributes
      FROM tiled)
 SELECT ST_AsMVT(q, $11, $12, 'geom') as mvt
 from q
@@ -175,7 +214,7 @@ WITH filtered AS
     q as
     (SELECT 1 as c1,
             ST_AsMVTGeom(ST_Transform(wkb_geometry, 3857), TileBBox($4, $5, $6, 3857), $7, 10, false) AS geom,
-            jsonb_build_object('count', 1, 'a', a) as attributes
+            jsonb_build_object('count', 1, 'expansionZoom', 10, 'a', a) AS attributes
      FROM filtered)
 SELECT ST_AsMVT(q, $8, $9, 'geom') as mvt
 from q
