@@ -11,32 +11,49 @@ const unclusteredQuery = ({
   table,
   geometry,
   sourceLayer,
+  maxZoomLevel,
   resolution,
   attributes,
   query,
+}: {
+  x: number;
+  y: number;
+  z: number;
+  table: string;
+  geometry: string;
+  sourceLayer: string;
+  maxZoomLevel: number;
+  resolution: number;
+  attributes: string[];
+  query: string[];
 }) =>
   sql`
-WITH filtered AS
-    (SELECT ${sql.raw(table)}.${sql.raw(geometry)} ${sql.raw(
+WITH 
+  filtered AS (
+    SELECT 
+      ${sql.raw(table)}.${sql.raw(geometry)}${sql.raw(
     attributesToSelect(attributes)
   )}
     FROM ${sql.raw(table)}
-    WHERE ST_Intersects(TileBBox(${z}, ${x}, ${y}, 3857), ST_Transform(${sql.raw(
+    WHERE 
+      ST_Intersects(TileBBox(${z}, ${x}, ${y}, 3857), ST_Transform(${sql.raw(
     geometry
-  )}, 3857))
-      ${sql.raw(query.length > 0 ? `AND ${query.join(' AND ')}` : '')}
-    ),
-    q as
-    (SELECT 1 as c1,
-            ST_AsMVTGeom(ST_Transform(${sql.raw(
-              geometry
-            )}, 3857), TileBBox(${z}, ${x}, ${y}, 3857), ${resolution}, 10, false) AS geom,
-            jsonb_build_object('count', 1${sql.raw(
-              attributesToArray(attributes)
-            )}) as attributes
-     FROM filtered)
-SELECT ST_AsMVT(q, ${sourceLayer}, ${resolution}, 'geom') as mvt
-from q
+  )}, 3857))${sql.raw(
+    query.length > 0 ? `\n    AND ${query.join('\n    AND ')}` : ''
+  )}
+  ),
+  q AS (
+    SELECT 
+      1 AS c1,
+      ST_AsMVTGeom(ST_Transform(${sql.raw(geometry)}, 3857),
+      TileBBox(${z}, ${x}, ${y}, 3857), ${resolution}, 10, false) AS geom, 
+      jsonb_build_object('count', 1, 'expansionZoom', ${sql.raw(
+        `${maxZoomLevel}`
+      )}${sql.raw(attributesToArray(attributes))}) AS attributes
+    FROM filtered
+  )
+SELECT ST_AsMVT(q, ${sourceLayer}, ${resolution}, 'geom') AS mvt
+FROM q
 `;
 
 /**
@@ -50,22 +67,36 @@ const baseClusteredQuery = ({
   sourceLayer,
   resolution,
   attributes = [],
+}: {
+  filterBlock: string;
+  z: number;
+  x: number;
+  y: number;
+  sourceLayer: string;
+  resolution: number;
+  attributes: string[];
 }) => sql`
-    ${filterBlock}
-     tiled as
-    (SELECT center,
-            theCount ${sql.raw(attributesToSelect(attributes))}
-     ${sql.raw(`FROM grouped_clusters_${z}`)}
-     WHERE ST_Intersects(TileBBox(${z}, ${x}, ${y}, 3857), ST_Transform(center, 3857))),
-     q as
-    (SELECT 1 as c1,
-            ST_AsMVTGeom(ST_Transform(center, 3857), TileBBox(${z}, ${x}, ${y}, 3857), ${resolution}, 10, false) AS geom,
-            jsonb_build_object('count', theCount${sql.raw(
-              attributesToArray(attributes)
-            )}) as attributes
-     FROM tiled)
-SELECT ST_AsMVT(q, ${sourceLayer}, ${resolution}, 'geom') as mvt
-from q
+${filterBlock}
+  tiled as (
+    SELECT
+      center,
+      expansionZoom,
+      theCount${sql.raw(attributesToSelect(attributes))}
+    ${sql.raw(`FROM grouped_clusters_${z}`)}
+    WHERE
+      ST_Intersects(TileBBox(${z}, ${x}, ${y}, 3857), ST_Transform(center, 3857))
+  ),
+  q AS (
+    SELECT
+      1 as c1,
+      ST_AsMVTGeom(ST_Transform(center, 3857), TileBBox(${z}, ${x}, ${y}, 3857), ${resolution}, 10, false) AS geom,
+      jsonb_build_object('count', theCount, 'expansionZoom', expansionZoom${sql.raw(
+        attributesToArray(attributes)
+      )}) as attributes
+    FROM tiled
+  )
+SELECT ST_AsMVT(q, ${sourceLayer}, ${resolution}, 'geom') AS mvt
+FROM q
 `;
 
 /**
@@ -81,71 +112,104 @@ const filterBlock = ({
   query,
   attributes,
   additionalLevels,
+}: {
+  x: number;
+  y: number;
+  z: number;
+  maxZoomLevel: number;
+  table: string;
+  geometry: string;
+  query: string[];
+  attributes: string[];
+  additionalLevels: string;
 }) =>
   sql`
-  with filtered as
-    (SELECT ${sql.raw(table)}.${sql.raw(geometry)}, 1 as theCount ${sql.raw(
-    attributesToSelect(attributes)
-  )}
+WITH
+  filtered AS (
+    SELECT
+      ${sql.raw(table)}.${sql.raw(geometry)},
+      1 as theCount${sql.raw(attributesToSelect(attributes))}
     FROM ${sql.raw(table)}
-    WHERE ST_Intersects(TileBBox(${z}, ${x}, ${y}, 3857), ST_Transform(${sql.raw(
+    WHERE
+      ST_Intersects(TileBBox(${z}, ${x}, ${y}, 3857), ST_Transform(${sql.raw(
     geometry
-  )}, 3857))
-        ${sql.raw(query.length > 0 ? `AND ${query.join(' AND ')}` : '')}
-    ),
-    ${sql.raw(`clustered_${maxZoomLevel}`)} AS
-    (SELECT ${sql.raw(geometry)} as center,
-        theCount,
-        ${sql.raw(
-          `ST_ClusterDBSCAN(${geometry}, ${zoomToDistance(
-            maxZoomLevel
-          )}, 1) over () AS clusters`
-        )}
-        ${sql.raw(attributesToSelect(attributes))}
-    FROM filtered),
-    ${sql.raw(`grouped_clusters_${maxZoomLevel}`)} AS
-    (SELECT SUM(theCount) AS theCount,
+  )}, 3857))${sql.raw(query.length > 0 ? ` AND ${query.join(' AND ')}` : '')}
+  ),
+
+  ${sql.raw(`clustered_${maxZoomLevel}`)} AS (
+    SELECT
+      ${sql.raw(geometry)} as center,
+      theCount,
+      ${sql.raw(
+        `ST_ClusterDBSCAN(${geometry}, ${zoomToDistance(
+          maxZoomLevel
+        )}, 1) over () AS clusters`
+      )}${sql.raw(attributesToSelect(attributes))}
+    FROM filtered
+  ),
+  ${sql.raw(`grouped_clusters_${maxZoomLevel}`)} AS (
+    SELECT
       ${sql.raw(attributesFirstToSelect(attributes))}
-      ST_Centroid(ST_Collect(center)) AS center
+      SUM(theCount) AS theCount,
+      ST_Centroid(ST_Collect(center)) AS center,
+      clusters AS clusterNo,
+      ${sql.raw(`${maxZoomLevel + 1}`)} as expansionZoom
     ${sql.raw(`FROM clustered_${maxZoomLevel}`)}
-    GROUP BY clusters),
-    ${sql.raw(additionalLevels)}
+    GROUP BY clusters
+  ),
+  ${sql.raw(additionalLevels)}
 `;
 
 /**
  * Creates an SQL fragment for the particular zoomLevel depending on zoomLevel - 1 for its data
  */
-const additionalLevel = ({ zoomLevel, attributes }) => `
-    clustered_${zoomLevel} AS
-        (SELECT center,
-            theCount,
-            ST_ClusterDBSCAN(center, ${zoomToDistance(
-              zoomLevel
-            )}, 1) over () as clusters ${attributesToSelect(attributes)}
-        FROM grouped_clusters_${zoomLevel + 1}),
-    grouped_clusters_${zoomLevel} AS
-        (SELECT SUM(theCount) as theCount,
-            ${attributesFirstToSelect(attributes)}
-            ST_Centroid(ST_Collect(center)) as center
-        FROM clustered_${zoomLevel}
-        GROUP BY clusters),
+const additionalLevel = ({
+  zoomLevel,
+  attributes,
+}: {
+  zoomLevel: number;
+  attributes: string[];
+}) => `
+  clustered_${zoomLevel} AS (
+    SELECT
+      center,
+      expansionZoom,
+      theCount,
+      clusterNo AS previousClusterNo,
+      ST_ClusterDBSCAN(center, ${zoomToDistance(
+        zoomLevel
+      )}, 1) over () as clusters${attributesToSelect(attributes)}
+    FROM grouped_clusters_${zoomLevel + 1}
+  ),
+  grouped_clusters_${zoomLevel} AS (
+    SELECT
+      ${attributesFirstToSelect(attributes)}
+      clusters AS clusterNo,
+      (CASE COUNT(previousClusterNo) WHEN 1 THEN FIRST(expansionZoom) ELSE ${zoomLevel +
+        1} END) as expansionZoom,
+      SUM(theCount) as theCount,
+      ST_Centroid(ST_Collect(center)) as center
+    FROM clustered_${zoomLevel}
+    GROUP BY clusters
+  ),
 `;
 
 /**
  * Calculates the radius applied to ST_ClusterDBSCAN for the zoomLevel
  */
-const zoomToDistance = zoomLevel => 10 / Math.pow(2, zoomLevel);
+const zoomToDistance = (zoomLevel: number): number =>
+  10 / Math.pow(2, zoomLevel);
 
 /**
  * Creates an SQL fragment of the dynamic attributes to an sql select statement
  */
-const attributesToSelect = attributes =>
+const attributesToSelect = (attributes: string[]): string =>
   attributes.length > 0 ? `, ${attributes.join(', ')}` : '';
 
 /**
  * Creates an SQL fragmemt which selects the first value of an attribute using the FIRST aggregate function
  */
-const attributesFirstToSelect = attributes =>
+const attributesFirstToSelect = (attributes: string[]): string =>
   attributes.length > 0
     ? `${attributes
         .map(attribute => `FIRST(${attribute}) as ${attribute}`)
@@ -155,7 +219,7 @@ const attributesFirstToSelect = attributes =>
 /**
  * Creates an SQL fragment that selects the dynamic attributes to be used by each zoom level query
  */
-const attributesToArray = attributes =>
+const attributesToArray = (attributes: string[]): string =>
   attributes.length > 0
     ? ', ' +
       attributes.map(attribute => `'${attribute}', ${attribute}`).join(', ')
@@ -217,6 +281,7 @@ export function createQueryForTile({
       table,
       geometry,
       sourceLayer,
+      maxZoomLevel,
       resolution,
       attributes,
       query,

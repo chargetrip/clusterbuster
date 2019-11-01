@@ -2,23 +2,19 @@ const { createQueryForTile } = require('../queries');
 
 describe('createClusterQuery', () => {
   it('should create a clustered Query', () => {
-    const query = createQueryForTile({
-      z: 1,
-      x: 0,
-      y: 1,
-      table: 'public.stations',
-      geometry: 'wkb_geometry',
-      sourceLayer: 'points',
-      maxZoomLevel: 10,
-      resolution: 512,
-      attributes: ['a'],
-      query: ['status = status', '[1, 2] @> [2, 3]'],
-    });
     expect(
-      query.sql
-    ).toMatchSnapshot();
-    expect(
-      query.values
+      createQueryForTile({
+        z: 1,
+        x: 0,
+        y: 1,
+        table: 'public.stations',
+        geometry: 'wkb_geometry',
+        sourceLayer: 'points',
+        maxZoomLevel: 10,
+        resolution: 512,
+        attributes: ['a'],
+        query: ['status = status', '[1, 2] @> [2, 3]'],
+      })
     ).toMatchSnapshot();
   });
 
