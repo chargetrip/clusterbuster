@@ -119,7 +119,7 @@ The main performance bottleneck for clusterbuster is the PostgreSQL server as th
 
 All of these tile servers and tile generators offer some subset of the functionality we required, but lacked atleast one, which is our motivation for making clusterbuster.
 
-| Tiler         | dynamic data | filtering | clustering |
+| Tiler         | dynamic data | filtering | backend clustering |
 | ------------- | ------------ | --------- | ---------- |
 | Clusterbuster | ✓            | ✓         | ✓          |
 | Martin        | ✓            | ✓         | x          |
