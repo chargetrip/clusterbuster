@@ -121,12 +121,12 @@ All of these tile servers and tile generators offer some subset of the functiona
 
 | Tiler         | dynamic data | filtering | clustering |
 | ------------- | ------------ | --------- | ---------- |
-| clusterbuster | ✓            | ✓         | ✓          |
+| Clusterbuster | ✓            | ✓         | ✓          |
 | Martin        | ✓            | ✓         | x          |
 | Tilestrata    | ✓            | x         | x          |
 | Tegola        | ✓            | x         | x          |
 | Tippecanoe    | x            | x         | ✓          |
-| supertiler    | x            | x         | ✓          |
+| Supertiler    | x            | x         | ✓          |
 
 ## When not to use clusterbuster
 
