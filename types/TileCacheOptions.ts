@@ -5,7 +5,12 @@ export interface TileCacheOptions {
   /**
    * @description Flag which indicate if the cache should be enabled. Default is true.
    */
-  enable?: boolean;
+  enabled?: boolean;
+
+  /**
+   * @deprecated replaced by {enabled}
+   */
+  enable?: boolean
 
   /**
    * @description The type of the cache. Default is lru-cache

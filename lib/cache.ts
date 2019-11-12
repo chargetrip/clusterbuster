@@ -5,6 +5,7 @@ import { TileCacheOptions } from '../types';
  * @description The default options for the cache
  */
 export const defaultCacheOptions: TileCacheOptions = {
+  enabled: true,
   enable: true,
   type: 'lru-cache',
   lruOptions: {
@@ -22,9 +23,6 @@ export const defaultCacheOptions: TileCacheOptions = {
 };
 
 export function Cache(options: TileCacheOptions = defaultCacheOptions) {
-  if (!options.enable) {
-    return;
-  }
 
   let lruCache = null;
   let redisCache = null;
@@ -63,6 +61,9 @@ export function Cache(options: TileCacheOptions = defaultCacheOptions) {
       y: number,
       filters: string[]
     ): string => {
+      if (!options.enabled || !options.enable) {
+        return null;
+      }
       const where = sha1(
         filters.sort((a, b) => (a > b ? 1 : a < b ? -1 : 0)).join('-')
       );
@@ -78,7 +79,7 @@ export function Cache(options: TileCacheOptions = defaultCacheOptions) {
      * @returns The cache value or null if not found or disabled
      */
     getCacheValue: async (key: string): Promise<any> => {
-      if (!options.enable) {
+      if (!options.enabled || !options.enable) {
         return null;
       }
 
@@ -101,8 +102,8 @@ export function Cache(options: TileCacheOptions = defaultCacheOptions) {
      * @param {TileCacheOptions} options The cache options
      */
     setCacheValue: async (key: string, value: any): Promise<void> => {
-      if (!options.enable) {
-        return;
+      if (!options.enabled || !options.enable) {
+        return null;
       }
 
       if (options.type === 'lru-cache') {

@@ -1,4 +1,5 @@
 require('dotenv').config();
+const path = require('path');
 
 import { Pool } from 'pg';
 
@@ -15,19 +16,24 @@ import { Pool } from 'pg';
       console.error(e.message);
     }
 
-    await pool.query(`CREATE TABLE public.points
-    (
-      id TEXT,
-      wkb_geometry geometry(Point,4326),
-      speed TEXT,
-      status TEXT,
+    try {
+      await pool.query(`CREATE TABLE public.points
+      (
+        id TEXT,
+        wkb_geometry geometry(Point,4326),
+        speed TEXT,
+        status TEXT,
+  
+        PRIMARY KEY(id)
+      )
+      TABLESPACE pg_default;`);
+    } catch (e) {
+      console.error(e);
+    }
+  }
 
-      PRIMARY KEY(id)
-    )
-    TABLESPACE pg_default;`);
-
-    const points = require('./points.json'),
-      sql = `INSERT INTO public.points (
+  const points = require(path.join(__dirname, './points.json')),
+    sql = `INSERT INTO public.points (
         id, 
         wkb_geometry, 
         speed,
@@ -35,19 +41,18 @@ import { Pool } from 'pg';
       )
       VALUES ($1, ST_SetSRID(ST_GeomFromGeoJSON($2),4326),$3,$4);`;
 
-    for (const point of points) {
-      const params = [
-        point.id,
-        JSON.stringify(point.geometry),
-        point.properties.speed,
-        point.properties.status,
-      ];
+  for (const point of points) {
+    const params = [
+      point.id,
+      JSON.stringify(point.geometry),
+      point.properties.speed,
+      point.properties.status,
+    ];
 
-      try {
-        await pool.query(sql, params);
-      } catch (e) {
-        console.error(e.message);
-      }
+    try {
+      await pool.query(sql, params);
+    } catch (e) {
+      console.error(e.message);
     }
   }
 })().catch(console.error);
