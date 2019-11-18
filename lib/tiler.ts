@@ -34,6 +34,7 @@ export async function TileServer<T>({
     table = 'public.points',
     geometry = 'wkb_geometry',
     sourceLayer = 'points',
+    radius = 20,
     queryParams = {},
     id = '',
   }: TileInput<T>) => {

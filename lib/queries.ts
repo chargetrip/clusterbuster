@@ -97,6 +97,7 @@ const filterBlock = ({
   y,
   z,
   maxZoomLevel,
+  radius,
   table,
   geometry,
   query,
@@ -107,6 +108,7 @@ const filterBlock = ({
   y: number;
   z: number;
   maxZoomLevel: number;
+  radius: number;
   table: string;
   geometry: string;
   query: string[];
@@ -129,7 +131,8 @@ const filterBlock = ({
         theCount,
         ${sql.raw(
           `ST_ClusterDBSCAN(${geometry}, ${zoomToDistance(
-            maxZoomLevel
+            maxZoomLevel,
+            radius
           )}, 1) over () AS clusters`
         )}
         ${sql.raw(attributesToSelect(attributes))}
@@ -150,9 +153,11 @@ const filterBlock = ({
  */
 const additionalLevel = ({
   zoomLevel,
+  radius,
   attributes,
 }: {
   zoomLevel: number;
+  radius: number;
   attributes: string[];
 }) => `
     clustered_${zoomLevel} AS
@@ -161,7 +166,8 @@ const additionalLevel = ({
             clusterNo AS previousClusterNo,
             theCount,
             ST_ClusterDBSCAN(center, ${zoomToDistance(
-              zoomLevel
+              zoomLevel,
+              radius
             )}, 1) over () as clusters ${attributesToSelect(attributes)}
         FROM grouped_clusters_${zoomLevel + 1}),
     grouped_clusters_${zoomLevel} AS
@@ -178,7 +184,8 @@ const additionalLevel = ({
 /**
  * Calculates the radius applied to ST_ClusterDBSCAN for the zoomLevel
  */
-const zoomToDistance = zoomLevel => 10 / Math.pow(2, zoomLevel);
+const zoomToDistance = (zoomLevel: number, radius: number = 20) =>
+  radius / Math.pow(2, zoomLevel);
 
 /**
  * Creates an SQL fragment of the dynamic attributes to an sql select statement
@@ -216,6 +223,7 @@ export function createQueryForTile({
   table,
   geometry,
   sourceLayer,
+  radius,
   resolution,
   attributes,
   query,
@@ -227,6 +235,7 @@ export function createQueryForTile({
     for (let i = maxZoomLevel - 1; i >= z; --i) {
       additionalLevels += additionalLevel({
         zoomLevel: i,
+        radius,
         attributes,
       });
     }
@@ -236,6 +245,7 @@ export function createQueryForTile({
         x,
         y,
         maxZoomLevel,
+        radius,
         table,
         geometry,
         query,
