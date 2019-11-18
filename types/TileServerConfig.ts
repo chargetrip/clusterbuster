@@ -12,12 +12,6 @@ export interface TileServerConfig<T> {
   maxZoomLevel?: number;
 
   /**
-   * @description The tile resolution in pixels, default is 512, but try 256 if you
-   * are unsure what your mapping front-end library uses
-   */
-  resolution?: number;
-
-  /**
    * @description LRU tile cache options, each tile request is stored in this cache.
    * clusterbuster tries to provide sane defaults
    */

@@ -7,6 +7,8 @@ export interface IQueryInput extends TileRequest {
   sourceLayer: string;
   radius: number;
   resolution: number;
+  extent: number;
+  bufferSize: number;
   attributes: string[];
   query: string[];
   debug: boolean;

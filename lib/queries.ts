@@ -12,7 +12,8 @@ const unclusteredQuery = ({
   geometry,
   maxZoomLevel,
   sourceLayer,
-  resolution,
+  extent,
+  bufferSize,
   attributes,
   query,
 }: {
@@ -23,7 +24,8 @@ const unclusteredQuery = ({
   geometry: string;
   sourceLayer: string;
   maxZoomLevel: number;
-  resolution: number;
+  extent: number;
+  bufferSize: number;
   attributes: string[];
   query: string[];
 }) =>
@@ -42,12 +44,12 @@ WITH filtered AS
     (SELECT 1 as c1,
             ST_AsMVTGeom(ST_Transform(${sql.raw(
               geometry
-            )}, 3857), TileBBox(${z}, ${x}, ${y}, 3857), ${resolution}, 10, false) AS geom,
+            )}, 3857), TileBBox(${z}, ${x}, ${y}, 3857), ${extent}, ${bufferSize}, false) AS geom,
             jsonb_build_object('count', 1, 'expansionZoom', ${sql.raw(
               `${maxZoomLevel}`
             )}${sql.raw(attributesToArray(attributes))}) AS attributes
      FROM filtered)
-SELECT ST_AsMVT(q, ${sourceLayer}, ${resolution}, 'geom') as mvt
+SELECT ST_AsMVT(q, ${sourceLayer}, ${extent}, 'geom') as mvt
 from q
 `;
 
@@ -60,7 +62,8 @@ const baseClusteredQuery = ({
   x,
   y,
   sourceLayer,
-  resolution,
+  extent,
+  bufferSize,
   attributes = [],
 }: {
   filterBlock: string;
@@ -68,7 +71,8 @@ const baseClusteredQuery = ({
   x: number;
   y: number;
   sourceLayer: string;
-  resolution: number;
+  extent: number;
+  bufferSize: number;
   attributes: string[];
 }) => sql`
     ${filterBlock}
@@ -80,12 +84,12 @@ const baseClusteredQuery = ({
      WHERE ST_Intersects(TileBBox(${z}, ${x}, ${y}, 3857), ST_Transform(center, 3857))),
      q as
     (SELECT 1 as c1,
-            ST_AsMVTGeom(ST_Transform(center, 3857), TileBBox(${z}, ${x}, ${y}, 3857), ${resolution}, 10, false) AS geom,
+            ST_AsMVTGeom(ST_Transform(center, 3857), TileBBox(${z}, ${x}, ${y}, 3857), ${extent}, ${bufferSize}, false) AS geom,
             jsonb_build_object('count', theCount, 'expansionZoom', expansionZoom${sql.raw(
               attributesToArray(attributes)
             )}) as attributes
      FROM tiled)
-SELECT ST_AsMVT(q, ${sourceLayer}, ${resolution}, 'geom') as mvt
+SELECT ST_AsMVT(q, ${sourceLayer}, ${extent}, 'geom') as mvt
 from q
 `;
 
@@ -224,7 +228,8 @@ export function createQueryForTile({
   geometry,
   sourceLayer,
   radius,
-  resolution,
+  extent,
+  bufferSize,
   attributes,
   query,
   debug,
@@ -256,7 +261,8 @@ export function createQueryForTile({
       x,
       y,
       sourceLayer,
-      resolution,
+      extent,
+      bufferSize,
       attributes,
     });
     debug && console.log(ret.sql);
@@ -272,7 +278,8 @@ export function createQueryForTile({
       geometry,
       sourceLayer,
       maxZoomLevel,
-      resolution,
+      extent,
+      bufferSize,
       attributes,
       query,
     });

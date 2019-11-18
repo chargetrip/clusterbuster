@@ -25,6 +25,16 @@ export interface TileInput<T> extends TileRequest {
   radius?: number;
 
   /**
+   * @description The tile extent. Here the grid dimensions will be 4096x4096
+   */
+  extent?: number;
+
+  /**
+   * @description The buffer size. Here we'll have a margin of 256 grid cells in addition to the tile extent.
+   */
+  bufferSize?: number;
+
+  /**
    * @description The query parameters used to filter
    */
   queryParams?: T | {};
