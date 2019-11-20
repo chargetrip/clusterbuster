@@ -20,6 +20,11 @@ export interface TileInput<T> extends TileRequest {
   sourceLayer?: string;
 
   /**
+   * @description The cluster radius in pixels. Default is 20
+   */
+  radius?: number;
+
+  /**
    * @description The query parameters used to filter
    */
   queryParams?: T | {};
