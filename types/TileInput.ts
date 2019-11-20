@@ -25,12 +25,14 @@ export interface TileInput<T> extends TileRequest {
   radius?: number;
 
   /**
-   * @description The tile extent. Here the grid dimensions will be 4096x4096
+   * @description The tile extent is the grid dimension value as specified by ST_AsMVT. The default is 4096.
+   * @see https://postgis.net/docs/ST_AsMVT.html
    */
   extent?: number;
 
   /**
-   * @description The buffer size. Here we'll have a margin of 256 grid cells in addition to the tile extent.
+   * @description The buffer around the tile extent in the number of grid cells as specified by ST_AsMVT. The default is 256.
+   * @see https://postgis.net/docs/ST_AsMVT.html
    */
   bufferSize?: number;
 
