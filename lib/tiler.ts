@@ -35,6 +35,8 @@ export async function TileServer<T>({
     geometry = 'wkb_geometry',
     sourceLayer = 'points',
     radius = 20,
+    extent = 4096,
+    bufferSize = 256,
     queryParams = {},
     id = '',
   }: TileInput<T>) => {
@@ -63,7 +65,8 @@ export async function TileServer<T>({
           table,
           geometry,
           sourceLayer,
-          resolution,
+          extent,
+          bufferSize,
           attributes,
           query: filtersQuery,
           debug,

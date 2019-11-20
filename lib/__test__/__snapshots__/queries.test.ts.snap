@@ -177,10 +177,10 @@ exports[`createClusterQuery should create a clustered Query 1`] = `
      WHERE ST_Intersects(TileBBox($4, $5, $6, 3857), ST_Transform(center, 3857))),
      q as
     (SELECT 1 as c1,
-            ST_AsMVTGeom(ST_Transform(center, 3857), TileBBox($7, $8, $9, 3857), $10, 10, false) AS geom,
+            ST_AsMVTGeom(ST_Transform(center, 3857), TileBBox($7, $8, $9, 3857), $10, $11, false) AS geom,
             jsonb_build_object('count', theCount, 'expansionZoom', expansionZoom, 'a', a) as attributes
      FROM tiled)
-SELECT ST_AsMVT(q, $11, $12, 'geom') as mvt
+SELECT ST_AsMVT(q, $12, $13, 'geom') as mvt
 from q
 "
 `;
@@ -196,9 +196,10 @@ Array [
   1,
   0,
   1,
-  512,
+  4096,
+  256,
   "points",
-  512,
+  4096,
 ]
 `;
 
@@ -213,10 +214,10 @@ WITH filtered AS
     ),
     q as
     (SELECT 1 as c1,
-            ST_AsMVTGeom(ST_Transform(wkb_geometry, 3857), TileBBox($4, $5, $6, 3857), $7, 10, false) AS geom,
+            ST_AsMVTGeom(ST_Transform(wkb_geometry, 3857), TileBBox($4, $5, $6, 3857), $7, $8, false) AS geom,
             jsonb_build_object('count', 1, 'expansionZoom', 10, 'a', a) AS attributes
      FROM filtered)
-SELECT ST_AsMVT(q, $8, $9, 'geom') as mvt
+SELECT ST_AsMVT(q, $9, $10, 'geom') as mvt
 from q
 ",
   "type": "SLONIK_TOKEN_SQL",
@@ -227,9 +228,10 @@ from q
     15,
     0,
     1,
-    512,
+    4096,
+    256,
     "points",
-    512,
+    4096,
   ],
 }
 `;

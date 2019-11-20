@@ -10,16 +10,13 @@ describe('createClusterQuery', () => {
       geometry: 'wkb_geometry',
       sourceLayer: 'points',
       maxZoomLevel: 10,
-      resolution: 512,
+      extent: 4096,
+      bufferSize: 256,
       attributes: ['a'],
       query: ['status = status', '[1, 2] @> [2, 3]'],
     });
-    expect(
-      query.sql
-    ).toMatchSnapshot();
-    expect(
-      query.values
-    ).toMatchSnapshot();
+    expect(query.sql).toMatchSnapshot();
+    expect(query.values).toMatchSnapshot();
   });
 
   it('should create a unclustered Query', () => {
@@ -32,7 +29,8 @@ describe('createClusterQuery', () => {
         geometry: 'wkb_geometry',
         sourceLayer: 'points',
         maxZoomLevel: 10,
-        resolution: 512,
+        extent: 4096,
+        bufferSize: 256,
         attributes: ['a'],
         query: [],
       })

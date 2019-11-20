@@ -14,6 +14,7 @@ export interface TileServerConfig<T> {
   /**
    * @description The tile resolution in pixels, default is 512, but try 256 if you
    * are unsure what your mapping front-end library uses
+   * @deprecated This is ignored and will be removed in future releases
    */
   resolution?: number;
 
