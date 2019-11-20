@@ -12,7 +12,6 @@ const { TileServer } = require('clusterbuster');
 TileServer({
     // types/TileServerConfig.ts
   maxZoomLevel,
-  resolution: 512,
   attributes: ['status', 'speed'],
   filtersToWhere: filters => {
     // You are responsible for protecting against SQL injection in this function. Because there are many ways to filter, it depends on the filter type on how to approach this.
@@ -37,6 +36,8 @@ TileServer({
         y: 1,
         table: 'public.my_points_table',
         geometry: 'my_geometry_column'
+        extent: 4096,
+        bufferSize: 256,
     });
     // send the tile in binary MVT format to the front-end
 });

@@ -11,7 +11,6 @@ const maxZoomLevel = 12;
 const { TileServer } = require('../dist');
 TileServer({
   maxZoomLevel,
-  resolution: 512,
   attributes: ['status', 'speed'],
   filtersToWhere: (filters = { status: undefined, speed: undefined }) => {
     // You are responsible for protecting against SQL injection in this function. Because there are many ways to filter, it depends on the filter type on how to approach this.
@@ -43,6 +42,8 @@ TileServer({
       x: req.params.x,
       y: req.params.y,
       query: req.query,
+      extent: 4096,
+      bufferSize: 256,
       table,
       geometry,
       id: req.id,
