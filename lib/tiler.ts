@@ -7,6 +7,7 @@ import { zip } from './zip';
 
 export async function TileServer<T>({
   maxZoomLevel = 12,
+  resolution = 512,
   cacheOptions = defaultCacheOptions,
   pgPoolOptions = {},
   filtersToWhere = null,
