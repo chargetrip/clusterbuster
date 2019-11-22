@@ -12,7 +12,7 @@ exports[`createClusterQuery should create a clustered Query 1`] = `
     clustered_10 AS
     (SELECT wkb_geometry as center,
         theCount,
-        ST_ClusterDBSCAN(wkb_geometry, 0.01953125, 1) over () AS clusters
+        ST_ClusterDBSCAN(wkb_geometry, 0.0146484375, 1) over () AS clusters
         , a
     FROM filtered),
     grouped_clusters_10 AS
@@ -29,7 +29,7 @@ exports[`createClusterQuery should create a clustered Query 1`] = `
             expansionZoom,
             clusterNo AS previousClusterNo,
             theCount,
-            ST_ClusterDBSCAN(center, 0.0390625, 1) over () as clusters , a
+            ST_ClusterDBSCAN(center, 0.029296875, 1) over () as clusters , a
         FROM grouped_clusters_10),
     grouped_clusters_9 AS
         (SELECT SUM(theCount) as theCount,
@@ -45,7 +45,7 @@ exports[`createClusterQuery should create a clustered Query 1`] = `
             expansionZoom,
             clusterNo AS previousClusterNo,
             theCount,
-            ST_ClusterDBSCAN(center, 0.078125, 1) over () as clusters , a
+            ST_ClusterDBSCAN(center, 0.05859375, 1) over () as clusters , a
         FROM grouped_clusters_9),
     grouped_clusters_8 AS
         (SELECT SUM(theCount) as theCount,
@@ -61,7 +61,7 @@ exports[`createClusterQuery should create a clustered Query 1`] = `
             expansionZoom,
             clusterNo AS previousClusterNo,
             theCount,
-            ST_ClusterDBSCAN(center, 0.15625, 1) over () as clusters , a
+            ST_ClusterDBSCAN(center, 0.1171875, 1) over () as clusters , a
         FROM grouped_clusters_8),
     grouped_clusters_7 AS
         (SELECT SUM(theCount) as theCount,
@@ -77,7 +77,7 @@ exports[`createClusterQuery should create a clustered Query 1`] = `
             expansionZoom,
             clusterNo AS previousClusterNo,
             theCount,
-            ST_ClusterDBSCAN(center, 0.3125, 1) over () as clusters , a
+            ST_ClusterDBSCAN(center, 0.234375, 1) over () as clusters , a
         FROM grouped_clusters_7),
     grouped_clusters_6 AS
         (SELECT SUM(theCount) as theCount,
@@ -93,7 +93,7 @@ exports[`createClusterQuery should create a clustered Query 1`] = `
             expansionZoom,
             clusterNo AS previousClusterNo,
             theCount,
-            ST_ClusterDBSCAN(center, 0.625, 1) over () as clusters , a
+            ST_ClusterDBSCAN(center, 0.46875, 1) over () as clusters , a
         FROM grouped_clusters_6),
     grouped_clusters_5 AS
         (SELECT SUM(theCount) as theCount,
@@ -109,7 +109,7 @@ exports[`createClusterQuery should create a clustered Query 1`] = `
             expansionZoom,
             clusterNo AS previousClusterNo,
             theCount,
-            ST_ClusterDBSCAN(center, 1.25, 1) over () as clusters , a
+            ST_ClusterDBSCAN(center, 0.9375, 1) over () as clusters , a
         FROM grouped_clusters_5),
     grouped_clusters_4 AS
         (SELECT SUM(theCount) as theCount,
@@ -125,7 +125,7 @@ exports[`createClusterQuery should create a clustered Query 1`] = `
             expansionZoom,
             clusterNo AS previousClusterNo,
             theCount,
-            ST_ClusterDBSCAN(center, 2.5, 1) over () as clusters , a
+            ST_ClusterDBSCAN(center, 1.875, 1) over () as clusters , a
         FROM grouped_clusters_4),
     grouped_clusters_3 AS
         (SELECT SUM(theCount) as theCount,
@@ -141,7 +141,7 @@ exports[`createClusterQuery should create a clustered Query 1`] = `
             expansionZoom,
             clusterNo AS previousClusterNo,
             theCount,
-            ST_ClusterDBSCAN(center, 5, 1) over () as clusters , a
+            ST_ClusterDBSCAN(center, 3.75, 1) over () as clusters , a
         FROM grouped_clusters_3),
     grouped_clusters_2 AS
         (SELECT SUM(theCount) as theCount,
@@ -157,7 +157,7 @@ exports[`createClusterQuery should create a clustered Query 1`] = `
             expansionZoom,
             clusterNo AS previousClusterNo,
             theCount,
-            ST_ClusterDBSCAN(center, 10, 1) over () as clusters , a
+            ST_ClusterDBSCAN(center, 7.5, 1) over () as clusters , a
         FROM grouped_clusters_2),
     grouped_clusters_1 AS
         (SELECT SUM(theCount) as theCount,

@@ -186,9 +186,9 @@ const additionalLevel = ({
 `;
 
 /**
- * Calculates the radius applied to ST_ClusterDBSCAN for the zoomLevel
+ * Calculates the eps applied to ST_ClusterDBSCAN for the zoomLevel based on a specified radius
  */
-const zoomToDistance = (zoomLevel: number, radius: number = 20) =>
+const zoomToDistance = (zoomLevel: number, radius: number = 15) =>
   radius / Math.pow(2, zoomLevel);
 
 /**
