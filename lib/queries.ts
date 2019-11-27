@@ -1,5 +1,6 @@
 import { IQueryInput } from './types/IQueryInput';
 import { sql } from 'slonik';
+import { ZoomToDistance } from '../types/ZoomToDistance';
 
 /**
  * @description This query returns a tile with only points
@@ -107,6 +108,7 @@ const filterBlock = ({
   query,
   attributes,
   additionalLevels,
+  zoomToDistance,
 }: {
   x: number;
   y: number;
@@ -118,6 +120,7 @@ const filterBlock = ({
   query: string[];
   attributes: string[];
   additionalLevels: string;
+  zoomToDistance: (zoomLevel: number, radius: number) => number;
 }) =>
   sql`
   with filtered as
@@ -159,10 +162,12 @@ const additionalLevel = ({
   zoomLevel,
   radius,
   attributes,
+  zoomToDistance,
 }: {
   zoomLevel: number;
   radius: number;
   attributes: string[];
+  zoomToDistance: ZoomToDistance;
 }) => `
     clustered_${zoomLevel} AS
         (SELECT center,
@@ -188,7 +193,7 @@ const additionalLevel = ({
 /**
  * Calculates the eps applied to ST_ClusterDBSCAN for the zoomLevel based on a specified radius
  */
-const zoomToDistance = (zoomLevel: number, radius: number = 15) =>
+export const zoomToDistance = (zoomLevel: number, radius: number = 15) =>
   radius / Math.pow(2, zoomLevel);
 
 /**
@@ -233,6 +238,7 @@ export function createQueryForTile({
   attributes,
   query,
   debug,
+  zoomToDistance,
 }: IQueryInput) {
   if (z < maxZoomLevel) {
     // Clustered multi-zoom level case
@@ -242,6 +248,7 @@ export function createQueryForTile({
         zoomLevel: i,
         radius,
         attributes,
+        zoomToDistance
       });
     }
     const ret = baseClusteredQuery({
@@ -256,6 +263,7 @@ export function createQueryForTile({
         query,
         additionalLevels,
         attributes,
+        zoomToDistance,
       }),
       z,
       x,
