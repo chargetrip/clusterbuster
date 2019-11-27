@@ -1,13 +1,12 @@
 import pg from 'pg';
 import { TileInput, TileRenderer, TileServerConfig } from '../types';
 import { Cache, defaultCacheOptions } from './cache';
-import { createQueryForTile } from './queries';
+import { createQueryForTile, zoomToDistance as defaultZoomToDistance } from './queries';
 import createSupportingSQLFunctions from './supporting';
 import { zip } from './zip';
 
 export async function TileServer<T>({
   maxZoomLevel = 12,
-  resolution = 512,
   cacheOptions = defaultCacheOptions,
   pgPoolOptions = {},
   filtersToWhere = null,
@@ -39,6 +38,7 @@ export async function TileServer<T>({
     bufferSize = 256,
     queryParams = {},
     id = '',
+    zoomToDistance = defaultZoomToDistance
   }: TileInput<T>) => {
     try {
       const filtersQuery = !!filtersToWhere ? filtersToWhere(queryParams) : [];
@@ -71,6 +71,7 @@ export async function TileServer<T>({
           attributes,
           query: filtersQuery,
           debug,
+          zoomToDistance
         });
         const result = await pool.query(query.sql, query.values);
         debug && console.timeEnd('query' + id);
