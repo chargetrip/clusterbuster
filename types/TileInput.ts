@@ -1,4 +1,5 @@
 import { TileRequest } from './TileRequest';
+import { ZoomToDistance } from './ZoomToDistance';
 
 /**
  * @description The required input values for the tile renderer
@@ -45,4 +46,13 @@ export interface TileInput<T> extends TileRequest {
    * @description Unique ID of the request, default is an empty string
    */
   id?: string;
+
+  /**
+   * @description Mapping function from zoomLevel to eps distance in ST_ClusterDBSCAN
+   * Default is `(zoomLevel: number, radius: number = 15) => radius / Math.pow(2, zoomLevel);`
+   * and should be sufficient for most scenario's. Override this function can be useful to tweak 
+   * cluster radius for specific zoom levels.
+   * 
+   */
+  zoomToDistance?: ZoomToDistance;
 }
