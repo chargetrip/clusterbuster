@@ -48,7 +48,11 @@ WITH filtered AS
             )}, 3857), TileBBox(${z}, ${x}, ${y}, 3857), ${extent}, ${bufferSize}, false) AS geom,
             jsonb_build_object('count', 1, 'expansionZoom', ${sql.raw(
               `${maxZoomLevel}`
-            )},'lng', ST_X (ST_Transform(center, 4326)),'lat', ST_Y (ST_Transform(center, 4326))${sql.raw(attributesToArray(attributes))}) AS attributes
+            )},'lng', ST_X (ST_Transform(${sql.raw(
+              geometry
+            )}, 4326)),'lat', ST_Y (ST_Transform(${sql.raw(
+              geometry
+            )}, 4326))${sql.raw(attributesToArray(attributes))}) AS attributes
      FROM filtered)
 SELECT ST_AsMVT(q, ${sourceLayer}, ${extent}, 'geom') as mvt
 from q
