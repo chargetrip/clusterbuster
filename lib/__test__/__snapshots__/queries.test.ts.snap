@@ -178,7 +178,7 @@ exports[`createClusterQuery should create a clustered Query 1`] = `
      q as
     (SELECT 1 as c1,
             ST_AsMVTGeom(ST_Transform(center, 3857), TileBBox($7, $8, $9, 3857), $10, $11, false) AS geom,
-            jsonb_build_object('count', theCount, 'expansionZoom', expansionZoom, 'a', a) as attributes
+            jsonb_build_object('count', theCount, 'expansionZoom', expansionZoom,'lng', ST_X (ST_Transform(center, 4326)),'lat', ST_Y (ST_Transform(center, 4326)), 'a', a) as attributes
      FROM tiled)
 SELECT ST_AsMVT(q, $12, $13, 'geom') as mvt
 from q
@@ -418,7 +418,7 @@ WITH filtered AS
     q as
     (SELECT 1 as c1,
             ST_AsMVTGeom(ST_Transform(wkb_geometry, 3857), TileBBox($4, $5, $6, 3857), $7, $8, false) AS geom,
-            jsonb_build_object('count', 1, 'expansionZoom', 10, 'a', a) AS attributes
+            jsonb_build_object('count', 1, 'expansionZoom', 10,'lng', ST_X (ST_Transform(center, 4326)),'lat', ST_Y (ST_Transform(center, 4326)), 'a', a) AS attributes
      FROM filtered)
 SELECT ST_AsMVT(q, $9, $10, 'geom') as mvt
 from q

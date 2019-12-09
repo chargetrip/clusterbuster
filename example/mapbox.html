@@ -82,6 +82,13 @@
             'circle-stroke-color': '#fff',
           },
         });
+
+        map.on('click', function({ point, target }) {
+          const features = target.queryRenderedFeatures(point, { layers: ['clusters', 'cluster_count', 'unclustered-point']});
+          if (features && features.length > 0) {
+            map.flyTo({center: [features[0].properties.lng, features[0].properties.lat]})
+          }
+        });
       });
     </script>
   </body>
