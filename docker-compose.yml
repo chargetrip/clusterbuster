@@ -1,0 +1,26 @@
+version: '2.1'
+services:
+  clusterbuster:
+    image: "clusterbuster:latest"
+    container_name: clusterbuster
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      PGUSER: admin
+      PGHOST: postgis
+      PGPASSWORD: admin
+      PGDATABASE: gis
+      PGPORT: 5432
+    ports:
+    - "3005:3005"
+
+  postgis:
+    image: kartoza/postgis:latest
+    container_name: some-postgis
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASS: admin
+      POSTGRES_DBNAME: gis
+    ports:
+      - "5432:5432"
