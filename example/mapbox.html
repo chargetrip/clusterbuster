@@ -50,6 +50,10 @@
           'source-layer': 'points',
           interactive: true,
           filter: ['>', ['get', 'count'], 1],
+          paint: {
+            'circle-radius': 20
+          }
+          
         });
 
         map.addLayer({
@@ -74,7 +78,7 @@
           type: 'circle',
           source: 'points',
           'source-layer': `points`,
-          filter: ['!', ['has', 'point_count']],
+          filter: ['==', ['get', 'count'], 1],
           paint: {
             'circle-color': '#11b4da',
             'circle-radius': 4,
