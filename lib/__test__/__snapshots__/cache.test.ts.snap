@@ -10,8 +10,6 @@ exports[`getCacheTtl should use request ttl as function 1`] = `2400`;
 
 exports[`getCacheTtl should use request ttl as number 1`] = `1800`;
 
-exports[`getCacheTtl should use request ttl as promise 1`] = `60`;
-
 exports[`getCacheTtl should use request ttl from array 1`] = `3600`;
 
 exports[`getCacheTtl should use request ttl from array 2`] = `2400`;

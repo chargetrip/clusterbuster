@@ -1,1 +1,1 @@
-export type TTtl = (zoomLevel: number) => number | Promise<number>;
+export type TTtl = (zoomLevel: number) => number;

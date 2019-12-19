@@ -132,10 +132,7 @@ export function Cache(
      * @param {number} zoomLevel The zoom level requested
      * @param {number | TTtl} ttl The time to leave of the cache
      */
-    getCacheTtl: async (
-      zoomLevel: number,
-      ttl?: number | TTtl
-    ): Promise<number> => {
+    getCacheTtl: (zoomLevel: number, ttl?: number | TTtl): number => {
       if (
         !cacheOptions.enabled ||
         !cacheOptions.enable ||
@@ -149,7 +146,7 @@ export function Cache(
       if (!!requestTtl) {
         return !isNaN(requestTtl as number)
           ? (requestTtl as number)
-          : await Promise.resolve((requestTtl as TTtl)(zoomLevel));
+          : (requestTtl as TTtl)(zoomLevel);
       }
 
       return 0;
