@@ -40,10 +40,10 @@ export function Cache(
     },
   };
 
-  if (customCacheOptions.type === 'lru-cache') {
+  if (cacheOptions.type === 'lru-cache') {
     const LRU = require('lru-cache');
     lruCache = new LRU(cacheOptions.lruOptions);
-  } else if (customCacheOptions.type === 'redis') {
+  } else if (cacheOptions.type === 'redis') {
     const Redis = require('ioredis');
     redisCache = new Redis(cacheOptions.redisOptions);
   }
