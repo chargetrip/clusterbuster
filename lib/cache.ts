@@ -1,5 +1,5 @@
 import sha1 from 'sha1';
-import { TileCacheOptions } from '../types';
+import { TileCacheOptions, TTtl } from '../types';
 
 /**
  * @description The default options for the cache
@@ -80,7 +80,6 @@ export function Cache(
      * @description Get the cache value of a cache key
      *
      * @param {string} key The cache key
-     * @param {TileCacheOptions} options The cache options
      * @returns The cache value or null if not found or disabled
      */
     getCacheValue: async (key: string): Promise<any> => {
@@ -104,9 +103,14 @@ export function Cache(
      *
      * @param {string} key The cache key
      * @param {any} value The cache value
-     * @param {TileCacheOptions} options The cache options
+     * @param {number} zoomLevel The zoom level requested
+     * @param {number | TTtl} ttl The time to leave of the cache
      */
-    setCacheValue: async (key: string, value: any): Promise<void> => {
+    setCacheValue: async (
+      key: string,
+      value: any,
+      ttl?: number
+    ): Promise<void> => {
       if (!cacheOptions.enabled || !cacheOptions.enable) {
         return null;
       }
@@ -114,12 +118,38 @@ export function Cache(
       if (cacheOptions.type === 'lru-cache') {
         lruCache.set(key, value);
       } else if (cacheOptions.type === 'redis') {
-        if (!!cacheOptions.redisOptions.ttl) {
-          await redisCache.set(key, value, 'EX', cacheOptions.redisOptions.ttl);
+        if (!!ttl) {
+          await redisCache.set(key, value, 'EX', ttl);
         } else {
           await redisCache.set(key, value);
         }
       }
+    },
+
+    /**
+     * @description Get the cache TTL from the zoom level and request cache TTL or config cache TTL
+     *
+     * @param {number} zoomLevel The zoom level requested
+     * @param {number | TTtl} ttl The time to leave of the cache
+     */
+    getCacheTtl: (zoomLevel: number, ttl?: number | TTtl): number => {
+      if (
+        !cacheOptions.enabled ||
+        !cacheOptions.enable ||
+        cacheOptions.type !== 'redis'
+      ) {
+        return 0;
+      }
+
+      const requestTtl = ttl || cacheOptions.redisOptions.ttl;
+
+      if (!!requestTtl) {
+        return !isNaN(requestTtl as number)
+          ? (requestTtl as number)
+          : (requestTtl as TTtl)(zoomLevel);
+      }
+
+      return 0;
     },
   };
 }

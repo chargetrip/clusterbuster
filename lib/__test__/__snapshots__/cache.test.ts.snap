@@ -3,3 +3,37 @@
 exports[`getCacheKey should generate key 1`] = `"table-0-1-2-b8a2645298053fb62ea03e27feea6c483d3fd27e"`;
 
 exports[`getCacheKey should generate key 2`] = `"table-0-1-2-b8a2645298053fb62ea03e27feea6c483d3fd27e"`;
+
+exports[`getCacheTtl should use global ttl 1`] = `3600`;
+
+exports[`getCacheTtl should use request ttl as function 1`] = `2400`;
+
+exports[`getCacheTtl should use request ttl as number 1`] = `1800`;
+
+exports[`getCacheTtl should use request ttl from array 1`] = `3600`;
+
+exports[`getCacheTtl should use request ttl from array 2`] = `2400`;
+
+exports[`getCacheTtl should use request ttl from array 3`] = `1800`;
+
+exports[`getCacheTtl should use request ttl from array 4`] = `0`;
+
+exports[`getCacheTtl should use request ttl from array 5`] = `0`;
+
+exports[`getCacheTtl should use request ttl from array 6`] = `0`;
+
+exports[`getCacheValue should get lru with a value 1`] = `
+Object {
+  "data": Array [],
+  "type": "Buffer",
+}
+`;
+
+exports[`getCacheValue should get no value 1`] = `null`;
+
+exports[`getCacheValue should get redis with a value 1`] = `
+Object {
+  "data": Array [],
+  "type": "Buffer",
+}
+`;

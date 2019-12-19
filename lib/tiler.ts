@@ -1,7 +1,10 @@
 import pg from 'pg';
 import { TileInput, TileRenderer, TileServerConfig } from '../types';
 import { Cache, defaultCacheOptions } from './cache';
-import { createQueryForTile, zoomToDistance as defaultZoomToDistance } from './queries';
+import {
+  createQueryForTile,
+  zoomToDistance as defaultZoomToDistance,
+} from './queries';
 import createSupportingSQLFunctions from './supporting';
 import { zip } from './zip';
 
@@ -33,12 +36,14 @@ export async function TileServer<T>({
     table = 'public.points',
     geometry = 'wkb_geometry',
     sourceLayer = 'points',
+    maxZoomLevel: requestMaxZoomLevel = undefined,
+    cacheTtl = undefined,
     radius = 15,
     extent = 4096,
     bufferSize = 256,
     queryParams = {},
     id = '',
-    zoomToDistance = defaultZoomToDistance
+    zoomToDistance = defaultZoomToDistance,
   }: TileInput<T>) => {
     try {
       const filtersQuery = !!filtersToWhere ? filtersToWhere(queryParams) : [];
@@ -61,7 +66,7 @@ export async function TileServer<T>({
           z,
           x,
           y,
-          maxZoomLevel,
+          maxZoomLevel: requestMaxZoomLevel || maxZoomLevel,
           table,
           geometry,
           radius,
@@ -71,7 +76,7 @@ export async function TileServer<T>({
           attributes,
           query: filtersQuery,
           debug,
-          zoomToDistance
+          zoomToDistance,
         });
         const result = await pool.query(query.sql, query.values);
         debug && console.timeEnd('query' + id);
@@ -81,7 +86,11 @@ export async function TileServer<T>({
         debug && console.timeEnd('gzip' + id);
 
         try {
-          await cache.setCacheValue(cacheKey, tile);
+          await cache.setCacheValue(
+            cacheKey,
+            tile,
+            await cache.getCacheTtl(z, cacheTtl)
+          );
         } catch (e) {
           // In case the cache set fail, we should return the generated tile
           debug && console.log({ e });
