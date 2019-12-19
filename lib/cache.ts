@@ -18,29 +18,34 @@ export const defaultCacheOptions: TileCacheOptions = {
   redisOptions: {
     ttl: 86400, // 24 hours
     host: process.env.REDIS_HOST,
-    dropBufferSupport: false,
   },
 };
 
-export function Cache(options: TileCacheOptions = defaultCacheOptions) {
-
+export function Cache(
+  customCacheOptions: TileCacheOptions = defaultCacheOptions
+) {
   let lruCache = null;
   let redisCache = null;
-
-  if (options.type === 'lru-cache') {
-    const LRU = require('lru-cache');
-    lruCache = new LRU({
+  const cacheOptions = {
+    ...defaultCacheOptions,
+    ...customCacheOptions,
+    lruOptions: {
       ...defaultCacheOptions.lruOptions,
-      ...options.lruOptions,
-    });
-  } else if (options.type === 'redis') {
-    const Redis = require('ioredis');
-
-    redisCache = new Redis({
+      ...customCacheOptions.lruOptions,
+    },
+    redisOptions: {
       ...defaultCacheOptions.redisOptions,
-      ...options.redisOptions,
-      ...{ dropBufferSupport: false },
-    });
+      ...customCacheOptions.redisOptions,
+      dropBufferSupport: false,
+    },
+  };
+
+  if (customCacheOptions.type === 'lru-cache') {
+    const LRU = require('lru-cache');
+    lruCache = new LRU(cacheOptions.lruOptions);
+  } else if (customCacheOptions.type === 'redis') {
+    const Redis = require('ioredis');
+    redisCache = new Redis(cacheOptions.redisOptions);
   }
 
   return {
@@ -61,7 +66,7 @@ export function Cache(options: TileCacheOptions = defaultCacheOptions) {
       y: number,
       filters: string[]
     ): string => {
-      if (!options.enabled || !options.enable) {
+      if (!cacheOptions.enabled || !cacheOptions.enable) {
         return null;
       }
       const where = sha1(
@@ -79,15 +84,15 @@ export function Cache(options: TileCacheOptions = defaultCacheOptions) {
      * @returns The cache value or null if not found or disabled
      */
     getCacheValue: async (key: string): Promise<any> => {
-      if (!options.enabled || !options.enable) {
+      if (!cacheOptions.enabled || !cacheOptions.enable) {
         return null;
       }
 
-      if (options.type === 'lru-cache') {
+      if (cacheOptions.type === 'lru-cache') {
         return lruCache.get(key);
       }
 
-      if (options.type === 'redis') {
+      if (cacheOptions.type === 'redis') {
         return await redisCache.getBuffer(key);
       }
 
@@ -102,19 +107,19 @@ export function Cache(options: TileCacheOptions = defaultCacheOptions) {
      * @param {TileCacheOptions} options The cache options
      */
     setCacheValue: async (key: string, value: any): Promise<void> => {
-      if (!options.enabled || !options.enable) {
+      if (!cacheOptions.enabled || !cacheOptions.enable) {
         return null;
       }
 
-      if (options.type === 'lru-cache') {
+      if (cacheOptions.type === 'lru-cache') {
         lruCache.set(key);
 
         return;
       }
 
-      if (options.type === 'redis') {
-        if (!!options.redisOptions.ttl) {
-          await redisCache.set(key, value, 'EX', options.redisOptions.ttl);
+      if (cacheOptions.type === 'redis') {
+        if (!!cacheOptions.redisOptions.ttl) {
+          await redisCache.set(key, value, 'EX', cacheOptions.redisOptions.ttl);
         } else {
           await await redisCache.set(key, value);
         }
