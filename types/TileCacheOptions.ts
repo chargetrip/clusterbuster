@@ -1,5 +1,5 @@
-import { Options } from 'lru-cache';
 import { RedisOptions } from 'ioredis';
+import { Options } from 'lru-cache';
 
 export interface TileCacheOptions {
   /**
