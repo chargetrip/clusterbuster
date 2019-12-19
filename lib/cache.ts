@@ -112,19 +112,13 @@ export function Cache(
       }
 
       if (cacheOptions.type === 'lru-cache') {
-        lruCache.set(key);
-
-        return;
-      }
-
-      if (cacheOptions.type === 'redis') {
+        lruCache.set(key, value);
+      } else if (cacheOptions.type === 'redis') {
         if (!!cacheOptions.redisOptions.ttl) {
           await redisCache.set(key, value, 'EX', cacheOptions.redisOptions.ttl);
         } else {
-          await await redisCache.set(key, value);
+          await redisCache.set(key, value);
         }
-
-        return;
       }
     },
   };
