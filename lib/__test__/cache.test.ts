@@ -1,10 +1,41 @@
 import { Cache } from '../cache';
 
+jest.mock('ioredis');
+jest.mock('lru-cache');
+
 describe('getCacheKey', () => {
   it('should generate key', () => {
     const cache = Cache();
     expect(cache.getCacheKey('table', 0, 1, 2, ['1', '2'])).toMatchSnapshot();
     expect(cache.getCacheKey('table', 0, 1, 2, ['2', '1'])).toMatchSnapshot();
+  });
+});
+
+describe('getCacheValue', () => {
+  it('should get no value', async () => {
+    const cache = Cache({
+      enabled: false,
+      enable: false,
+    });
+    expect(await cache.getCacheValue('key')).toMatchSnapshot();
+  });
+
+  it('should get lru with a value', async () => {
+    const cache = Cache({
+      enabled: true,
+      enable: true,
+      type: 'lru-cache',
+    });
+    expect(await cache.getCacheValue('key')).toMatchSnapshot();
+  });
+
+  it('should get redis with a value', async () => {
+    const cache = Cache({
+      enabled: true,
+      enable: true,
+      type: 'redis',
+    });
+    expect(await cache.getCacheValue('key')).toMatchSnapshot();
   });
 });
 

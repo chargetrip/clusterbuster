@@ -21,3 +21,19 @@ exports[`getCacheTtl should use request ttl from array 4`] = `0`;
 exports[`getCacheTtl should use request ttl from array 5`] = `0`;
 
 exports[`getCacheTtl should use request ttl from array 6`] = `0`;
+
+exports[`getCacheValue should get lru with a value 1`] = `
+Object {
+  "data": Array [],
+  "type": "Buffer",
+}
+`;
+
+exports[`getCacheValue should get no value 1`] = `null`;
+
+exports[`getCacheValue should get redis with a value 1`] = `
+Object {
+  "data": Array [],
+  "type": "Buffer",
+}
+`;
