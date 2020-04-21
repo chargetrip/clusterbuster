@@ -1,5 +1,5 @@
-import pg from 'pg';
-import { TileInput, TileRenderer, TileServerConfig } from '../types';
+import * as pg from 'pg';
+import { TileInput, TileRenderer, TileServerConfig } from './types/index';
 import { Cache, defaultCacheOptions } from './cache';
 import {
   createQueryForTile,
@@ -78,7 +78,7 @@ export async function TileServer<T>({
           debug,
           zoomToDistance,
         });
-        const result = await pool.query(query.sql, query.values);
+        const result = await pool.query<{ mvt: any }>(query.sql, query.values);
         debug && console.timeEnd('query' + id);
 
         debug && console.time('gzip' + id);

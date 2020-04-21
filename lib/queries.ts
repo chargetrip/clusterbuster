@@ -1,6 +1,6 @@
 import { IQueryInput } from './types/IQueryInput';
 import { sql } from 'slonik';
-import { ZoomToDistance } from '../types/ZoomToDistance';
+import { ZoomToDistance } from './types/index';
 
 /**
  * @description This query returns a tile with only points

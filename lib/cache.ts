@@ -1,5 +1,5 @@
 import sha1 from 'sha1';
-import { TileCacheOptions, TTtl } from '../types';
+import { TileCacheOptions, TTtl } from './types/index';
 
 /**
  * @description The default options for the cache
