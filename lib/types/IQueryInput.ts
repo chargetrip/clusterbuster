@@ -1,5 +1,5 @@
-import { TileRequest } from '../../types/TileRequest';
-import { ZoomToDistance } from '../../types/ZoomToDistance';
+import { TileRequest } from './TileRequest';
+import { ZoomToDistance } from './ZoomToDistance';
 
 export interface IQueryInput extends TileRequest {
   maxZoomLevel: number;

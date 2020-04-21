@@ -37,7 +37,7 @@
     "jest": "^24.9.0",
     "lru-cache": "^5.1.1",
     "pg": "^7.18.2",
-    "rollup": "^1.32.1",
+    "rollup": "^2.6.1",
     "rollup-plugin-babel": "^4.4.0",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-dts": "^1.4.0",
