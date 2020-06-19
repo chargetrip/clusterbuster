@@ -244,7 +244,7 @@ export function createQueryForTile({
   debug,
   zoomToDistance,
 }: IQueryInput) {
-  if (z < maxZoomLevel) {
+  if (z <= maxZoomLevel) {
     // Clustered multi-zoom level case
     let additionalLevels = '';
     for (let i = maxZoomLevel - 1; i >= z; --i) {
