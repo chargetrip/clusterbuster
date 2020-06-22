@@ -1,0 +1,339 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`createQueryForTile should work 1`] = `
+"WITH base_query AS (
+SELECT
+  geometry AS center,
+  1 AS size,
+  0 AS clusterNo,
+  13 AS expansionZoom, id, name
+FROM table
+WHERE 
+	ST_Intersects(TileBBox(0, 0, 0, 3857), ST_Transform(geometry, 3857))
+	AND name='name' AND op = 1\`
+),
+clustered_12 AS (
+SELECT
+  center,
+  expansionZoom,
+  clusterNo AS previousClusterNo,
+  size,
+  ST_ClusterDBSCAN(center, 0.003662109375, 1) over () as clusters, id, name
+FROM base_query
+),
+grouped_clusters_12 AS (
+SELECT
+  SUM(size) as size,
+  clusters AS clusterNo,
+  (
+    CASE COUNT(previousClusterNo) 
+      WHEN 1 THEN FIRST(expansionZoom) 
+      ELSE 13 END
+  ) AS expansionZoom, FIRST(id) as id, FIRST(name) as name,
+  ST_Centroid(ST_Collect(center)) as center
+FROM clustered_12
+GROUP BY clusters
+),
+clustered_11 AS (
+SELECT
+  center,
+  expansionZoom,
+  clusterNo AS previousClusterNo,
+  size,
+  ST_ClusterDBSCAN(center, 0.00732421875, 1) over () as clusters, id, name
+FROM grouped_clusters_12
+),
+grouped_clusters_11 AS (
+SELECT
+  SUM(size) as size,
+  clusters AS clusterNo,
+  (
+    CASE COUNT(previousClusterNo) 
+      WHEN 1 THEN FIRST(expansionZoom) 
+      ELSE 12 END
+  ) AS expansionZoom, FIRST(id) as id, FIRST(name) as name,
+  ST_Centroid(ST_Collect(center)) as center
+FROM clustered_11
+GROUP BY clusters
+),
+clustered_10 AS (
+SELECT
+  center,
+  expansionZoom,
+  clusterNo AS previousClusterNo,
+  size,
+  ST_ClusterDBSCAN(center, 0.0146484375, 1) over () as clusters, id, name
+FROM grouped_clusters_11
+),
+grouped_clusters_10 AS (
+SELECT
+  SUM(size) as size,
+  clusters AS clusterNo,
+  (
+    CASE COUNT(previousClusterNo) 
+      WHEN 1 THEN FIRST(expansionZoom) 
+      ELSE 11 END
+  ) AS expansionZoom, FIRST(id) as id, FIRST(name) as name,
+  ST_Centroid(ST_Collect(center)) as center
+FROM clustered_10
+GROUP BY clusters
+),
+clustered_9 AS (
+SELECT
+  center,
+  expansionZoom,
+  clusterNo AS previousClusterNo,
+  size,
+  ST_ClusterDBSCAN(center, 0.029296875, 1) over () as clusters, id, name
+FROM grouped_clusters_10
+),
+grouped_clusters_9 AS (
+SELECT
+  SUM(size) as size,
+  clusters AS clusterNo,
+  (
+    CASE COUNT(previousClusterNo) 
+      WHEN 1 THEN FIRST(expansionZoom) 
+      ELSE 10 END
+  ) AS expansionZoom, FIRST(id) as id, FIRST(name) as name,
+  ST_Centroid(ST_Collect(center)) as center
+FROM clustered_9
+GROUP BY clusters
+),
+clustered_8 AS (
+SELECT
+  center,
+  expansionZoom,
+  clusterNo AS previousClusterNo,
+  size,
+  ST_ClusterDBSCAN(center, 0.05859375, 1) over () as clusters, id, name
+FROM grouped_clusters_9
+),
+grouped_clusters_8 AS (
+SELECT
+  SUM(size) as size,
+  clusters AS clusterNo,
+  (
+    CASE COUNT(previousClusterNo) 
+      WHEN 1 THEN FIRST(expansionZoom) 
+      ELSE 9 END
+  ) AS expansionZoom, FIRST(id) as id, FIRST(name) as name,
+  ST_Centroid(ST_Collect(center)) as center
+FROM clustered_8
+GROUP BY clusters
+),
+clustered_7 AS (
+SELECT
+  center,
+  expansionZoom,
+  clusterNo AS previousClusterNo,
+  size,
+  ST_ClusterDBSCAN(center, 0.1171875, 1) over () as clusters, id, name
+FROM grouped_clusters_8
+),
+grouped_clusters_7 AS (
+SELECT
+  SUM(size) as size,
+  clusters AS clusterNo,
+  (
+    CASE COUNT(previousClusterNo) 
+      WHEN 1 THEN FIRST(expansionZoom) 
+      ELSE 8 END
+  ) AS expansionZoom, FIRST(id) as id, FIRST(name) as name,
+  ST_Centroid(ST_Collect(center)) as center
+FROM clustered_7
+GROUP BY clusters
+),
+clustered_6 AS (
+SELECT
+  center,
+  expansionZoom,
+  clusterNo AS previousClusterNo,
+  size,
+  ST_ClusterDBSCAN(center, 0.234375, 1) over () as clusters, id, name
+FROM grouped_clusters_7
+),
+grouped_clusters_6 AS (
+SELECT
+  SUM(size) as size,
+  clusters AS clusterNo,
+  (
+    CASE COUNT(previousClusterNo) 
+      WHEN 1 THEN FIRST(expansionZoom) 
+      ELSE 7 END
+  ) AS expansionZoom, FIRST(id) as id, FIRST(name) as name,
+  ST_Centroid(ST_Collect(center)) as center
+FROM clustered_6
+GROUP BY clusters
+),
+clustered_5 AS (
+SELECT
+  center,
+  expansionZoom,
+  clusterNo AS previousClusterNo,
+  size,
+  ST_ClusterDBSCAN(center, 0.46875, 1) over () as clusters, id, name
+FROM grouped_clusters_6
+),
+grouped_clusters_5 AS (
+SELECT
+  SUM(size) as size,
+  clusters AS clusterNo,
+  (
+    CASE COUNT(previousClusterNo) 
+      WHEN 1 THEN FIRST(expansionZoom) 
+      ELSE 6 END
+  ) AS expansionZoom, FIRST(id) as id, FIRST(name) as name,
+  ST_Centroid(ST_Collect(center)) as center
+FROM clustered_5
+GROUP BY clusters
+),
+clustered_4 AS (
+SELECT
+  center,
+  expansionZoom,
+  clusterNo AS previousClusterNo,
+  size,
+  ST_ClusterDBSCAN(center, 0.9375, 1) over () as clusters, id, name
+FROM grouped_clusters_5
+),
+grouped_clusters_4 AS (
+SELECT
+  SUM(size) as size,
+  clusters AS clusterNo,
+  (
+    CASE COUNT(previousClusterNo) 
+      WHEN 1 THEN FIRST(expansionZoom) 
+      ELSE 5 END
+  ) AS expansionZoom, FIRST(id) as id, FIRST(name) as name,
+  ST_Centroid(ST_Collect(center)) as center
+FROM clustered_4
+GROUP BY clusters
+),
+clustered_3 AS (
+SELECT
+  center,
+  expansionZoom,
+  clusterNo AS previousClusterNo,
+  size,
+  ST_ClusterDBSCAN(center, 1.875, 1) over () as clusters, id, name
+FROM grouped_clusters_4
+),
+grouped_clusters_3 AS (
+SELECT
+  SUM(size) as size,
+  clusters AS clusterNo,
+  (
+    CASE COUNT(previousClusterNo) 
+      WHEN 1 THEN FIRST(expansionZoom) 
+      ELSE 4 END
+  ) AS expansionZoom, FIRST(id) as id, FIRST(name) as name,
+  ST_Centroid(ST_Collect(center)) as center
+FROM clustered_3
+GROUP BY clusters
+),
+clustered_2 AS (
+SELECT
+  center,
+  expansionZoom,
+  clusterNo AS previousClusterNo,
+  size,
+  ST_ClusterDBSCAN(center, 3.75, 1) over () as clusters, id, name
+FROM grouped_clusters_3
+),
+grouped_clusters_2 AS (
+SELECT
+  SUM(size) as size,
+  clusters AS clusterNo,
+  (
+    CASE COUNT(previousClusterNo) 
+      WHEN 1 THEN FIRST(expansionZoom) 
+      ELSE 3 END
+  ) AS expansionZoom, FIRST(id) as id, FIRST(name) as name,
+  ST_Centroid(ST_Collect(center)) as center
+FROM clustered_2
+GROUP BY clusters
+),
+clustered_1 AS (
+SELECT
+  center,
+  expansionZoom,
+  clusterNo AS previousClusterNo,
+  size,
+  ST_ClusterDBSCAN(center, 7.5, 1) over () as clusters, id, name
+FROM grouped_clusters_2
+),
+grouped_clusters_1 AS (
+SELECT
+  SUM(size) as size,
+  clusters AS clusterNo,
+  (
+    CASE COUNT(previousClusterNo) 
+      WHEN 1 THEN FIRST(expansionZoom) 
+      ELSE 2 END
+  ) AS expansionZoom, FIRST(id) as id, FIRST(name) as name,
+  ST_Centroid(ST_Collect(center)) as center
+FROM clustered_1
+GROUP BY clusters
+),
+clustered_0 AS (
+SELECT
+  center,
+  expansionZoom,
+  clusterNo AS previousClusterNo,
+  size,
+  ST_ClusterDBSCAN(center, 15, 1) over () as clusters, id, name
+FROM grouped_clusters_1
+),
+grouped_clusters_0 AS (
+SELECT
+  SUM(size) as size,
+  clusters AS clusterNo,
+  (
+    CASE COUNT(previousClusterNo) 
+      WHEN 1 THEN FIRST(expansionZoom) 
+      ELSE 1 END
+  ) AS expansionZoom, FIRST(id) as id, FIRST(name) as name,
+  ST_Centroid(ST_Collect(center)) as center
+FROM clustered_0
+GROUP BY clusters
+),
+tile AS (
+SELECT
+  ST_AsMVTGeom(ST_Transform(center, 3857), TileBBox(0, 0, 0, 3857), 4096, 256, false) AS geom,
+  jsonb_build_object(
+    'count', size, 
+    'expansionZoom', expansionZoom, 
+    'lng', ST_X(ST_Transform(center, 4326)), 
+    'lat', ST_Y(ST_Transform(center, 4326)), 'id', id, 'name', name
+  ) AS attributes
+FROM grouped_clusters_0
+)
+SELECT ST_AsMVT(tile, 'points', 4096, 'geom') AS mvt FROM tile"
+`;
+
+exports[`createQueryForTile should work 2`] = `
+"WITH base_query AS (
+SELECT
+  geometry AS center,
+  1 AS size,
+  0 AS clusterNo,
+  13 AS expansionZoom, id, name
+FROM table
+WHERE 
+	ST_Intersects(TileBBox(14, 0, 0, 3857), ST_Transform(geometry, 3857))
+	AND name='name' AND op = 1\`
+),
+tile AS (
+SELECT
+  ST_AsMVTGeom(ST_Transform(center, 3857), TileBBox(14, 0, 0, 3857), 4096, 256, false) AS geom,
+  jsonb_build_object(
+    'count', size, 
+    'expansionZoom', expansionZoom, 
+    'lng', ST_X(ST_Transform(center, 4326)), 
+    'lat', ST_Y(ST_Transform(center, 4326)), 'id', id, 'name', name
+  ) AS attributes
+FROM base_query
+)
+SELECT ST_AsMVT(tile, 'points', 4096, 'geom') AS mvt FROM tile"
+`;

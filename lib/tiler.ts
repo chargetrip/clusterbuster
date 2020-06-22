@@ -1,10 +1,11 @@
-import { TileInput, TileRenderer, TileServerConfig } from './types/index';
 import { Cache, defaultCacheOptions } from './cache';
 import {
   createQueryForTile,
-  zoomToDistance as defaultZoomToDistance,
-} from './queries';
+  defaultGetBaseQuery,
+  defaultZoomToDistance,
+} from './queries/index';
 import createSupportingSQLFunctions from './supporting';
+import { TileInput, TileRenderer, TileServerConfig } from './types/index';
 import { zip } from './zip';
 
 export async function TileServer<T>({
@@ -20,7 +21,7 @@ export async function TileServer<T>({
     max: 100,
     ...pgPoolOptions,
   });
-  pool.on('error', err => {
+  pool.on('error', (err) => {
     debug && console.error('Unexpected error on idle client', err);
     process.exit(-1);
   });
@@ -44,6 +45,7 @@ export async function TileServer<T>({
     queryParams = {},
     id = '',
     zoomToDistance = defaultZoomToDistance,
+    getBaseQuery = defaultGetBaseQuery,
   }: TileInput<T>) => {
     try {
       const filtersQuery = !!filtersToWhere ? filtersToWhere(queryParams) : [];
@@ -59,7 +61,7 @@ export async function TileServer<T>({
         // In case the cache get fail, we continue to generate the tile
         debug && console.log({ e });
       }
-      let query;
+      let query: string;
 
       try {
         query = createQueryForTile({
@@ -77,8 +79,9 @@ export async function TileServer<T>({
           query: filtersQuery,
           debug,
           zoomToDistance,
+          getBaseQuery,
         });
-        const result = await pool.query(query.sql, query.values);
+        const result = await pool.query(query);
         debug && console.timeEnd('query' + id);
 
         debug && console.time('gzip' + id);
@@ -98,8 +101,7 @@ export async function TileServer<T>({
 
         return tile;
       } catch (e) {
-        debug && console.log(query ? query.sql : '');
-        debug && console.log(query ? query.values : '');
+        debug && console.log(query);
         debug && console.log({ e });
       }
     } catch (e) {

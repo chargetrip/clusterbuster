@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`defaultZoomToDistance should work 1`] = `2`;
+
+exports[`defaultZoomToDistance should work 2`] = `1`;
+
+exports[`defaultZoomToDistance should work 3`] = `0.0625`;
+
+exports[`defaultZoomToDistance should work 4`] = `0.001953125`;
+
+exports[`defaultZoomToDistance should work 5`] = `0.0001220703125`;
+
+exports[`defaultZoomToDistance should work 6`] = `15`;
+
+exports[`defaultZoomToDistance should work 7`] = `0.1171875`;
+
+exports[`defaultZoomToDistance should work 8`] = `0.00091552734375`;

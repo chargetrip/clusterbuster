@@ -1,0 +1,43 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`defaultGetBaseQuery should work 1`] = `
+"
+SELECT
+  geometry AS center,
+  1 AS size,
+  0 AS clusterNo,
+  13 AS expansionZoom, id, name
+FROM table
+WHERE 
+	ST_Intersects(TileBBox(0, 0, 0, 3857), ST_Transform(geometry, 3857))
+	
+"
+`;
+
+exports[`defaultGetBaseQuery should work 2`] = `
+"
+SELECT
+  geometry AS center,
+  1 AS size,
+  0 AS clusterNo,
+  13 AS expansionZoom, id, name
+FROM table
+WHERE 
+	ST_Intersects(TileBBox(0, 0, 0, 3857), ST_Transform(geometry, 3857))
+	AND name = 'name'
+"
+`;
+
+exports[`defaultGetBaseQuery should work 3`] = `
+"
+SELECT
+  geometry AS center,
+  1 AS size,
+  0 AS clusterNo,
+  13 AS expansionZoom, id, name
+FROM table
+WHERE 
+	ST_Intersects(TileBBox(0, 0, 0, 3857), ST_Transform(geometry, 3857))
+	AND name = 'name' AND id = '1'
+"
+`;
