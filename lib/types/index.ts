@@ -1,4 +1,4 @@
-export * from './IQueryInput';
+export * from './queries/index';
 export * from './TileCacheOptions';
 export * from './TileInput';
 export * from './TileRenderer';

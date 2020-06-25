@@ -1,3 +1,4 @@
+import { GetBaseQuery } from './queries/index';
 import { TileRequest } from './TileRequest';
 import { TTtl } from './TTtl';
 import { ZoomToDistance } from './ZoomToDistance';
@@ -56,6 +57,19 @@ export interface TileInput<T> extends TileRequest {
    *
    */
   zoomToDistance?: ZoomToDistance;
+
+  /**
+   * @description Function which create the based query with applied filters
+   * Default is using the table name to select from and add the intersect within the BBox of the tiles,
+   * also add the filters to where in the query
+   * Be aware, if you overwrite this you need to make sure the result return the following columns:
+   * - "geometry" AS center
+   * - 1 AS size
+   * - 0 AS clusterNo
+   * - "maxZoomLevel + 1" AS expansionZoom
+   * - all the attibutes from the list
+   */
+  getBaseQuery?: GetBaseQuery;
 
   /**
    * @description The highest zoom level at which data is clustered.

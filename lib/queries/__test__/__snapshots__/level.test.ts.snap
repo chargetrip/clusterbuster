@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`defaultGetLevelClusterQuery should work 1`] = `
+"
+SELECT
+  center,
+  expansionZoom,
+  clusterNo AS previousClusterNo,
+  size,
+  ST_ClusterDBSCAN(center, 0.0006103515625, 1) over () as clusters, id, name
+FROM base_query
+"
+`;
+
+exports[`defaultGetLevelGroupQuery should work 1`] = `
+"
+SELECT
+  SUM(size) as size,
+  clusters AS clusterNo,
+  (
+    CASE COUNT(previousClusterNo) 
+      WHEN 1 THEN FIRST(expansionZoom) 
+      ELSE 15 END
+  ) AS expansionZoom, FIRST(id), FIRST(name), 
+  ST_Centroid(ST_Collect(center)) as center
+FROM clustered_14
+GROUP BY clusters
+"
+`;
