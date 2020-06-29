@@ -63,6 +63,17 @@ export async function TileServer<T>({
       }
       let query: string;
 
+      z = parseInt(`${z}`, 10);
+      if (isNaN(z)) {
+        throw new Error('Invalid zoom level');
+      }
+
+      x = parseInt(`${x}`, 10);
+      y = parseInt(`${y}`, 10);
+      if (isNaN(x) || isNaN(y)) {
+        throw new Error('Invalid tile coordinates');
+      }
+
       try {
         query = createQueryForTile({
           z,
