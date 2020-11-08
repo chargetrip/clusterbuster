@@ -22,3 +22,16 @@ export const attributesToArray = (attributes: string[]) =>
     ? ', ' +
       attributes.map((attribute) => `'${attribute}', ${attribute}`).join(', ')
     : '';
+
+
+export const customAttributesToArray = (attributes: string[], arrayAttrs) =>
+	 attributes.length > 0
+		? ', ' +
+			attributes.map((attribute) => {
+				const value = arrayAttrs.includes(attribute) ? `array_to_string(${attribute}, ',' , '*')` : attribute;
+
+				return `'${attribute}', ${value}`
+			}).join(', ')
+		: '';
+
+

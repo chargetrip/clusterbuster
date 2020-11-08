@@ -40,6 +40,12 @@ export interface TileServerConfig<T> {
    */
   attributes: string[];
 
+
+  /**
+   * Array type attributes
+   */
+  arrayAttributes: string[];
+
   /**
    * @description Show debug logging, default false
    */
