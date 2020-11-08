@@ -1,6 +1,6 @@
 {
   "name": "clusterbuster-with-arrray",
-  "version": "0.0.0-development",
+  "version": "0.0.1-development",
   "description": "MVT map tiling server with built-in clustering and filtering",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
