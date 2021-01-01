@@ -10,6 +10,7 @@ import {
   attributesFirstToSelect,
   attributesToArray,
   attributesToSelect,
+  customAttributesToArray,
 } from './attributes';
 import { defaultGetBaseQuery } from './base';
 import {
@@ -28,6 +29,7 @@ export interface ITileQueryInput extends TileRequest {
   extent: number;
   bufferSize: number;
   attributes: string[];
+  arrayAttributes: string[];
   query: string[];
   debug: boolean;
   zoomToDistance?: ZoomToDistance;
@@ -49,6 +51,7 @@ export function createQueryForTile({
   extent,
   bufferSize,
   attributes,
+  arrayAttributes,
   query,
   debug,
   zoomToDistance = defaultZoomToDistance,
@@ -104,7 +107,7 @@ export function createQueryForTile({
       geometry: 'center',
       extent,
       bufferSize,
-      attributes: attributesToArray(attributes),
+      attributes: customAttributesToArray(attributes, arrayAttributes),
     })})`
   );
 

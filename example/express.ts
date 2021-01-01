@@ -12,6 +12,8 @@ const { TileServer } = require('../dist');
 TileServer({
   maxZoomLevel,
   attributes: ['status', 'speed'],
+  // you can use array attributes, e.g. ?statuses=busy,free
+  // arrayAttributes: ['statuses'],
   filtersToWhere: (filters = { status: undefined, speed: undefined }) => {
     // You are responsible for protecting against SQL injection in this function. Because there are many ways to filter, it depends on the filter type on how to approach this.
 
@@ -23,6 +25,12 @@ TileServer({
     if (filters.speed && ['slow', 'fast'].includes(filters.speed)) {
       whereStatements.push(`speed = '${filters.speed}'`);
     }
+
+    // just example of array attributes:
+    // if (filters.statuses) {
+    //   whereStatements.push(`statuses @> ARRAY[${filters.statuses}]`);
+    // }
+
     return whereStatements;
   },
 }).then(server => {
