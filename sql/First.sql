@@ -5,7 +5,7 @@ RETURNS anyelement LANGUAGE SQL IMMUTABLE STRICT AS $$
 $$;
  
 -- And then wrap an aggregate around it
-CREATE AGGREGATE public.FIRST (
+CREATE OR REPLACE AGGREGATE public.FIRST (
         sfunc    = public.first_agg,
         basetype = anyelement,
         stype    = anyelement
