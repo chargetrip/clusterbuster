@@ -14,6 +14,7 @@ export async function TileServer<T>({
   pgPoolOptions = {},
   filtersToWhere = null,
   attributes = [],
+  arrayAttributes = [],
   debug = false,
 }: TileServerConfig<T>): Promise<TileRenderer<T>> {
   const { Pool } = require('pg');
@@ -87,6 +88,7 @@ export async function TileServer<T>({
           extent,
           bufferSize,
           attributes,
+          arrayAttributes,
           query: filtersQuery,
           debug,
           zoomToDistance,
