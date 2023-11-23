@@ -14,7 +14,7 @@ export const defaultGetBaseQuery: GetBaseQuery = ({
   query,
 }: IBaseQueryInput) => `
 SELECT
-  ${geometry} AS center,
+st_flipcoordinates(${geometry}) AS center,
   1 AS size,
   0 AS clusterNo,
   ${maxZoomLevel + 1} AS expansionZoom${attributes}

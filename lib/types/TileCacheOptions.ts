@@ -8,11 +8,6 @@ export interface TileCacheOptions {
   enabled?: boolean;
 
   /**
-   * @deprecated replaced by {enabled}
-   */
-  enable?: boolean;
-
-  /**
    * @description The type of the cache. Default is lru-cache
    */
   type?: 'lru-cache' | 'redis';

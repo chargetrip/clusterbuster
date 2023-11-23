@@ -12,7 +12,7 @@ export async function TileServer<T>({
   maxZoomLevel = 12,
   cacheOptions = defaultCacheOptions,
   pgPoolOptions = {},
-  filtersToWhere = null,
+  filtersToWhere = () => [],
   attributes = [],
   debug = false,
 }: TileServerConfig<T>): Promise<TileRenderer<T>> {
@@ -52,16 +52,18 @@ export async function TileServer<T>({
 
       debug && console.time('query' + id);
       const cacheKey = cache.getCacheKey(table, z, x, y, filtersQuery);
-      try {
-        const value = await cache.getCacheValue(cacheKey);
-        if (value) {
-          return value;
+      if (cacheKey) {
+        try {
+          const value = await cache.getCacheValue(cacheKey);
+          if (value) {
+            return value;
+          }
+        } catch (e) {
+          // In case the cache get fail, we continue to generate the tile
+          debug && console.log({ e });
         }
-      } catch (e) {
-        // In case the cache get fail, we continue to generate the tile
-        debug && console.log({ e });
       }
-      let query: string;
+      let query: string = '';
 
       z = parseInt(`${z}`, 10);
       if (isNaN(z)) {
@@ -99,17 +101,18 @@ export async function TileServer<T>({
         const tile = await zip(result.rows[0].mvt);
         debug && console.timeEnd('gzip' + id);
 
-        try {
-          await cache.setCacheValue(
-            cacheKey,
-            tile,
-            await cache.getCacheTtl(z, cacheTtl)
-          );
-        } catch (e) {
-          // In case the cache set fail, we should return the generated tile
-          debug && console.log({ e });
+        if (cacheKey) {
+          try {
+            await cache.setCacheValue(
+              cacheKey,
+              tile,
+              await cache.getCacheTtl(z, cacheTtl)
+            );
+          } catch (e) {
+            // In case the cache set fail, we should return the generated tile
+            debug && console.log({ e });
+          }
         }
-
         return tile;
       } catch (e) {
         debug && console.log(query);

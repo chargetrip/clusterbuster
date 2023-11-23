@@ -6,7 +6,6 @@ import { TileCacheOptions, TTtl } from './types/index';
  */
 export const defaultCacheOptions: TileCacheOptions = {
   enabled: true,
-  enable: true,
   type: 'lru-cache',
   lruOptions: {
     max: 100000,
@@ -24,8 +23,8 @@ export const defaultCacheOptions: TileCacheOptions = {
 export function Cache(
   customCacheOptions: TileCacheOptions = defaultCacheOptions
 ) {
-  let lruCache = null;
-  let redisCache = null;
+  let lruCache: any = null;
+  let redisCache: any = null;
   const cacheOptions = {
     ...defaultCacheOptions,
     ...customCacheOptions,
@@ -40,12 +39,16 @@ export function Cache(
     },
   };
 
-  if (cacheOptions.type === 'lru-cache') {
-    const LRU = require('lru-cache');
-    lruCache = new LRU(cacheOptions.lruOptions);
-  } else if (cacheOptions.type === 'redis') {
-    const Redis = require('ioredis');
-    redisCache = new Redis(cacheOptions.redisOptions);
+  if (cacheOptions.enabled) {
+    if (cacheOptions.type === 'lru-cache') {
+      const LRU = require('lru-cache');
+  
+      lruCache = new LRU(cacheOptions.lruOptions);
+    } else if (cacheOptions.type === 'redis') {
+      const Redis = require('ioredis');
+  
+      redisCache = new Redis(cacheOptions.redisOptions);
+    }
   }
 
   return {
@@ -65,8 +68,8 @@ export function Cache(
       x: number,
       y: number,
       filters: string[]
-    ): string => {
-      if (!cacheOptions.enabled || !cacheOptions.enable) {
+    ): string | null => {
+      if (!cacheOptions.enabled) {
         return null;
       }
       const where = sha1(
@@ -83,7 +86,7 @@ export function Cache(
      * @returns The cache value or null if not found or disabled
      */
     getCacheValue: async (key: string): Promise<any> => {
-      if (!cacheOptions.enabled || !cacheOptions.enable) {
+      if (!cacheOptions.enabled) {
         return null;
       }
 
@@ -111,8 +114,8 @@ export function Cache(
       value: any,
       ttl?: number
     ): Promise<void> => {
-      if (!cacheOptions.enabled || !cacheOptions.enable) {
-        return null;
+      if (!cacheOptions.enabled) {
+        return;
       }
 
       if (cacheOptions.type === 'lru-cache') {
@@ -135,7 +138,6 @@ export function Cache(
     getCacheTtl: (zoomLevel: number, ttl?: number | TTtl): number => {
       if (
         !cacheOptions.enabled ||
-        !cacheOptions.enable ||
         cacheOptions.type !== 'redis'
       ) {
         return 0;
